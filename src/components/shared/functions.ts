@@ -1,15 +1,22 @@
-export function formatPhoneNumber(phoneNumber:string) {
-console.log(phoneNumber);
 
-    const cleanedNumber = phoneNumber.replace(/\D/g, '');
-  
-    if (cleanedNumber.startsWith('+')) {
-      const countryCode = '7';
-      const formattedNumber = `+${countryCode} (${cleanedNumber.slice(1, 4)}) ${cleanedNumber.slice(4, 7)} ${cleanedNumber.slice(7, 9)} ${cleanedNumber.slice(9)}`;
-      return formattedNumber;
-    } else {
-      const countryCode = '7';
-      const formattedNumber = `+${countryCode} (${cleanedNumber.slice(0, 3)}) ${cleanedNumber.slice(3, 6)} ${cleanedNumber.slice(6, 8)} ${cleanedNumber.slice(8)}`;
-      return formattedNumber;
-    }
+export function formatPhoneNumber(value: string): string {
+  value = value.replace('+7', '').replace(/\D/g, '').replace(/\s/g, '')
+
+  let formattedValue = ''
+
+  if (value.length > 0) {
+    formattedValue += '('
   }
+  if (value.length > 3) {
+    formattedValue += value.slice(0, 3) + ') '
+  } else {
+    formattedValue += value
+  }
+  if (value.length > 3 && value.length <= 6) {
+    formattedValue += value.slice(3)
+  } else if (value.length > 6) {
+    formattedValue += value.slice(3, 6) + ' ' + value.slice(6, 10)
+  }
+  
+  return `+7 ${formattedValue}`
+}

@@ -13,11 +13,9 @@ import { HiCheck, HiX } from "react-icons/hi";
 import { PhoneInput } from "@/components/ui/phone-input"
 import { formatPhoneNumber } from "../shared/functions"
 
-
-
 const FormSchema = z.object({
   model: z.string(),
-  phoneNumber: z.string().refine(val => val.length == 12, { message: "Пожалуйста, введите номер телефона!" })
+  phoneNumber: z.string().refine(val => val.length == 17, { message: "Пожалуйста, введите номер телефона!" })
 })
 
 export function InputForm() {
@@ -33,10 +31,9 @@ export function InputForm() {
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(123123);
+    console.log(data);
+
     setDialog(true)
-
-
   }
 
   const handlePhoneNumber = (e: any) => {
@@ -74,7 +71,7 @@ export function InputForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl onChange={(e) => { handlePhoneNumber(e) }}>
-                <Input maxLength={16} className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" placeholder="+7 (999) 999 99 99"  {...field}></Input>
+                <Input maxLength={18} className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" placeholder="+7 (999) 999 99 99"  {...field}></Input>
               </FormControl>
               {/* <FormMessage className="text-red-500 text-sm text-center" /> */}
             </FormItem>
@@ -95,7 +92,7 @@ export function InputForm() {
       </form>
 
       <Dialog open={dialog}>
-        <DialogContent className="flex flex-col items-center border-none w-[20%] h-[15%] bg-white">
+        <DialogContent className="flex flex-col items-center border-none min-w-[300px] w-[20%] h-[15%] bg-white">
           <Button className="-p-4 -m-5 sticky left-[100%] aspect-square text-red-500 text-xl bg-white hover:bg-white" onClick={() => setDialog(false)}><HiX /></Button>
           <HiCheck className="text-center text-[500%] text-green-500" />
           <p className="text-center text-black text-[90%] whitespace-nowrap">Спасибо! Данные успешно отправлены.</p>
