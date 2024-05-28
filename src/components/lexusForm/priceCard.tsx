@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { Input } from "../ui/input"
-import { FormEventHandler, useState } from "react"
+import { useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
-import { PhoneInput } from "@/components/ui/phone-input"
 import { formatPhoneNumber } from "../shared/functions"
+import Image from "next/image"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -20,7 +20,8 @@ const FormSchema = z.object({
 
 export function InputForm() {
 
-  const [dialog, setDialog] = useState(false)
+  const [okDialog, setOkDialog] = useState(false)
+  const [filesDialog, setFilesDialog] = useState(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -30,10 +31,30 @@ export function InputForm() {
     },
   })
 
+  const fileRef = useRef<HTMLInputElement>(null);
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
 
-    setDialog(true)
+    setOkDialog(true)
+  }
+
+  const handleFiles = () => {
+    if (!fileRef.current?.files?.length) fileRef.current?.click()
+    if (fileRef.current?.files?.length) setFilesDialog(true)
+    Array.from(fileRef.current?.files as FileList).map(el => console.log(el.name))
+
+    // console.log(fileRef.current?.value);
+    // console.log(fileRef.current?.files);
+  }
+
+  const addFiles = () => { 
+
+  }
+
+  const handleRemoveFile = (index: number) => {
+    console.log(index);
+
   }
 
   const handlePhoneNumber = (e: any) => {
@@ -77,13 +98,12 @@ export function InputForm() {
             </FormItem>
           )}
         />
-        <section>
+
+        <div>
           <p className="text-sm ml-[15px]">Прикрепить фото</p>
-          <Button onClick={(e) => {
-            e.preventDefault();
-            console.log("sueta");
-          }} className="rounded-2xl bg-slate-800 text-white relative">Загрузить файлы</Button>
-        </section>
+          <Button className="rounded-2xl bg-slate-800 text-white relative" type="button" onClick={() => handleFiles()}>Загрузить файлы</Button>
+          <Input style={{ display: "none" }} ref={fileRef} multiple type="file"></Input>
+        </div>
 
         <div className="flex items-center justify-center pt-2">
           <Button className="relative px-[70px] py-[30px] rounded-full bg-slate-800 text-white text-lg uppercase font-bold btn-alt" type="submit">Оценить авто</Button>
@@ -91,14 +111,46 @@ export function InputForm() {
 
       </form>
 
-      <Dialog open={dialog}>
+      <Dialog open={okDialog}>
         <DialogContent className="flex flex-col items-center border-none min-w-[300px] w-[20%] h-[15%] bg-white">
-          <Button className="-p-4 -m-5 sticky left-[100%] aspect-square text-red-500 text-xl bg-white hover:bg-white" onClick={() => setDialog(false)}><HiX /></Button>
+          <Button className="-p-4 -m-5 sticky left-[100%] aspect-square text-red-500 text-xl bg-white hover:bg-white" onClick={() => setOkDialog(false)}><HiX /></Button>
           <HiCheck className="text-center text-[500%] text-green-500" />
           <p className="text-center text-black text-[90%] whitespace-nowrap">Спасибо! Данные успешно отправлены.</p>
         </DialogContent>
       </Dialog>
 
+      <Dialog open={filesDialog}>
+        <DialogContent className="flex flex-col items-start border-none min-w-[300px] bg-white">
+          <Button
+            className="-p-4 -m-5 sticky left-[100%] aspect-square text-red-500 text-xl bg-white hover:bg-white"
+            onClick={() => setFilesDialog(false)}
+          >
+            <HiX />
+          </Button>
+
+          {Array.from(fileRef.current?.files as FileList || []).map((el, index) => (
+            <div key={index} className="relative">
+              <Image
+                src={URL.createObjectURL(el)}
+                alt={el.name}
+                height={200}
+                width={200}
+              />
+              <Button
+                size={"icon"}
+                className="absolute top-0 right-0 bg-red-500/80 hover:bg-red-600 text-white rounded p-0"
+                onClick={() => handleRemoveFile(index)}
+              >
+                <HiX className="p-0"/>
+              </Button>
+            </div>
+          ))}
+
+          <Button onClick={() => fileRef.current?.click()} className="w-full mt-4">Добавить изображение</Button>
+        </DialogContent>
+      </Dialog>
+
     </Form>
+
   )
 }
