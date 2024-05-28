@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { Input } from "../ui/input"
-import { useRef, useState } from "react"
+import { FormEvent, useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
-import { formatPhoneNumber } from "../shared/functions"
 import Image from "next/image"
+import PhoneInput, { formatPhoneNumber } from "../shared/phoneInput"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -48,7 +48,7 @@ export function InputForm() {
     // console.log(fileRef.current?.files);
   }
 
-  const addFiles = () => { 
+  const addFiles = () => {
 
   }
 
@@ -57,10 +57,10 @@ export function InputForm() {
 
   }
 
-  const handlePhoneNumber = (e: any) => {
+  const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
     if (!e) return
 
-    form.setValue("phoneNumber", formatPhoneNumber(e.target.value))
+    form.setValue("phoneNumber", formatPhoneNumber(e.currentTarget.value))
   }
 
   function onError(errors: any) {
@@ -91,8 +91,8 @@ export function InputForm() {
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormControl onChange={(e) => { handlePhoneNumber(e) }}>
-                <Input maxLength={18} className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" placeholder="+7 (999) 999 99 99"  {...field}></Input>
+              <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
+                <PhoneInput className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" {...field}></PhoneInput>
               </FormControl>
               {/* <FormMessage className="text-red-500 text-sm text-center" /> */}
             </FormItem>
@@ -141,7 +141,7 @@ export function InputForm() {
                 className="absolute top-0 right-0 bg-red-500/80 hover:bg-red-600 text-white rounded p-0"
                 onClick={() => handleRemoveFile(index)}
               >
-                <HiX className="p-0"/>
+                <HiX className="p-0" />
               </Button>
             </div>
           ))}
