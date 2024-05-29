@@ -12,10 +12,11 @@ import { FormEvent, useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
 import Image from "next/image"
 import PhoneInput, { formatPhoneNumber } from "../shared/phoneInput"
+import { FilesCarousel } from "./filesCarousel"
 
 const FormSchema = z.object({
   model: z.string(),
-  phoneNumber: z.string().refine(val => val.length == 17, { message: "Пожалуйста, введите номер телефона!" })
+  phoneNumber: z.string().refine(val => val.length == 18, { message: "Пожалуйста, введите номер телефона!" })
 })
 
 export function InputForm() {
@@ -34,27 +35,42 @@ export function InputForm() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
 
     setOkDialog(true)
   }
 
+  // const formData = new FormData()
+  const [formData, _] = useState(new FormData())
+
+
   const handleFiles = () => {
-    if (!fileRef.current?.files?.length) fileRef.current?.click()
-    if (fileRef.current?.files?.length) setFilesDialog(true)
-    Array.from(fileRef.current?.files as FileList).map(el => console.log(el.name))
-
-    // console.log(fileRef.current?.value);
-    // console.log(fileRef.current?.files);
+    if (!Array.from(formData.values()).length) addFile()
+    else setFilesDialog(true)
   }
 
-  const addFiles = () => {
+  const addFile = async () => {
+    fileRef.current?.click();
 
-  }
 
-  const handleRemoveFile = (index: number) => {
-    console.log(index);
+    const file = (fileRef.current?.files as FileList)[0];
+    if (!file) return
 
+
+    // if (!name || !file.type.includes("image")) {
+    //   alert("Неверный тип файла");
+    //   reject();
+    //   return;
+    // }
+
+    formData.append(file.name, file);
+
+  };
+
+  const removeFile = (file: File) => {
+    console.log(file.name);
+    console.log(Array.from(formData.values()))
+
+    formData.delete(file.name)
   }
 
   const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
@@ -64,7 +80,6 @@ export function InputForm() {
   }
 
   function onError(errors: any) {
-    console.log(errors);
 
     toast({
       title: Object.values(errors).map((el: any) => el.message).join(', '),
@@ -102,7 +117,7 @@ export function InputForm() {
         <div>
           <p className="text-sm ml-[15px]">Прикрепить фото</p>
           <Button className="rounded-2xl bg-slate-800 text-white relative" type="button" onClick={() => handleFiles()}>Загрузить файлы</Button>
-          <Input style={{ display: "none" }} ref={fileRef} multiple type="file"></Input>
+          <Input className="hidden" ref={fileRef} multiple type="file"></Input>
         </div>
 
         <div className="flex items-center justify-center pt-2">
@@ -120,7 +135,7 @@ export function InputForm() {
       </Dialog>
 
       <Dialog open={filesDialog}>
-        <DialogContent className="flex flex-col items-start border-none min-w-[300px] bg-white">
+        <DialogContent className="flex flex-col items-center border-none min-w-[300px] bg-white">
           <Button
             className="-p-4 -m-5 sticky left-[100%] aspect-square text-red-500 text-xl bg-white hover:bg-white"
             onClick={() => setFilesDialog(false)}
@@ -128,26 +143,15 @@ export function InputForm() {
             <HiX />
           </Button>
 
-          {Array.from(fileRef.current?.files as FileList || []).map((el, index) => (
-            <div key={index} className="relative">
-              <Image
-                src={URL.createObjectURL(el)}
-                alt={el.name}
-                height={200}
-                width={200}
-              />
-              <Button
-                size={"icon"}
-                className="absolute top-0 right-0 bg-red-500/80 hover:bg-red-600 text-white rounded p-0"
-                onClick={() => handleRemoveFile(index)}
-              >
-                <HiX className="p-0" />
-              </Button>
-            </div>
-          ))}
+          <div className="flex-1 flex items-center justify-center">
+            <FilesCarousel removeFile={removeFile} files={Array.from(formData.values()) as File[]}></FilesCarousel>
+          </div>
 
-          <Button onClick={() => fileRef.current?.click()} className="w-full mt-4">Добавить изображение</Button>
+          <Button onClick={() => addFile()} className="w-full mt-4 bg-slate-900">
+            Добавить изображение
+          </Button>
         </DialogContent>
+
       </Dialog>
 
     </Form>

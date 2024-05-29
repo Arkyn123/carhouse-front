@@ -5,7 +5,7 @@ import whatsappImage from "@public/whatsapp.svg"
 
 export default function Header() {
     return (
-        <header className="shadow-md bg-white text-black py-8  flex flex-row justify-center items-center">
+        <header className="shadow-slate-900 shadow-2xl bg-white text-black py-8 flex justify-center items-center">
             <a href="/" className="fixed left-[20%] flex col-1">
                 <Image
                     className=""
@@ -15,7 +15,7 @@ export default function Header() {
                     width={250}
                 />
             </a>
-            <div className="fixed flex items-center justify-center right-[22%] gap-6">
+            <div className="fixed flex items-center justify-center left-[63%] gap-6">
                 <p className="text-[110%] font-medium">+7 (963) 478-67-27</p>
                 <a href="https://api.whatsapp.com/send/?phone=79925027262&text&type=phone_number&app_absent=0" className="size-sm">
                     <Image

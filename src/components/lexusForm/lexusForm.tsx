@@ -68,7 +68,7 @@ export default function LexusForm() {
                 width={600}
             />
 
-            <Card className="rounded-3xl shadow flex flex-col items-center relative left-[60%] bottom-[115%] bg-slate-50/90 text-black h-[80%] w-[330px]">
+            <Card className="rounded-3xl shadow flex flex-col items-center relative left-[60%] bottom-[115%] bg-slate-50/90 text-black h-[80%] w-[325px]">
                 <CardHeader className="text-center items-center">
                     <CardTitle className="pt-3 pb-2 text-xl">
                         Узнайте цену вашего авто <br /> за 2 минуты
