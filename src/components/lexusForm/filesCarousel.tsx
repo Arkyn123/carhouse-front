@@ -12,24 +12,23 @@ import Image from "next/image"
 import { Button } from "../ui/button"
 import { HiX } from "react-icons/hi"
 
-
 type Props = {
     files: File[]
     removeFile: Function
 }
 
 export function FilesCarousel({ files, removeFile }: Props) {
-    if (!files.length) return (<div>sueta</div>)
+    if (!files.length) return (<div className="bg-slate-300/60 p-3 rounded-2xl shadow-sm shadow-slate-500/50 border-slate-700">Изображений не найдено</div>)
     return (
         <Carousel className="w-full max-w-xs">
             <CarouselContent>
                 {files.map((el, index) => (
                     <CarouselItem key={index}>
                         <div className="p-1">
-                            <Card>
+                            <Card className="relative">
                                 <CardContent className="flex aspect-square items-center justify-center p-6">
                                     {/* <span className="text-4xl font-semibold">{index + 1}</span> */}
-                                    <div key={index} className="relative">
+                                    <div className="relative">
                                         <Image
                                             src={URL.createObjectURL(el)}
                                             alt={el.name}
@@ -41,18 +40,18 @@ export function FilesCarousel({ files, removeFile }: Props) {
                                     </div>
                                 </CardContent>
                                 <Button
-                                    className="absolute top-0 right-0 bg-white/0 text-slate-900 hover:bg-red-500/70 hover:text-white rounded-md w-7 h-7 m-1 p-0"
+                                    className="absolute top-0 right-0 bg-white/0 text-slate-900 hover:bg-white/0 rounded-md w-5 h-5 m-1 p-0"
                                     onClick={() => removeFile(el)}
                                 >
-                                    <HiX size={23} />
+                                    <HiX size={20} />
                                 </Button>
                             </Card>
                         </div>
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            {<CarouselPrevious />}
+            {<CarouselNext />}
         </Carousel>
     )
 }

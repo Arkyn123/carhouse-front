@@ -8,11 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { Input } from "../ui/input"
-import { FormEvent, useRef, useState } from "react"
+import { FormEvent, FormEventHandler, useEffect, useRef, useState, SyntheticEvent, ChangeEvent } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
 import Image from "next/image"
 import PhoneInput, { formatPhoneNumber } from "../shared/phoneInput"
 import { FilesCarousel } from "./filesCarousel"
+import { useFormState } from "react-dom"
+import { sendDataToBot } from "./_actions"
+import { AxiosResponse } from "axios"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -23,6 +26,7 @@ export function InputForm() {
 
   const [okDialog, setOkDialog] = useState(false)
   const [filesDialog, setFilesDialog] = useState(false)
+  const [files, setFiles] = useState<File[]>([])
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -34,43 +38,58 @@ export function InputForm() {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const res = await sendDataToBot(data, files)
 
-    setOkDialog(true)
+    if (res!.data.ok) setOkDialog(true)
+    else {
+      toast({
+        title: 'Ошибка при отправке',
+        variant: 'destructive'
+      })
+      return
+    }
   }
 
-  // const formData = new FormData()
-  const [formData, _] = useState(new FormData())
-
-
-  const handleFiles = () => {
-    if (!Array.from(formData.values()).length) addFile()
+  const clickInput = () => {
+    if (files.length == 0) fileRef.current?.click()
     else setFilesDialog(true)
   }
 
-  const addFile = async () => {
-    fileRef.current?.click();
+  const handleChange = (e: any) => {
+    const file = e.target.files[0] as File
 
-
-    const file = (fileRef.current?.files as FileList)[0];
     if (!file) return
 
+    if (!file.type.includes('image')) {
+      toast({
+        title: 'Неверный тип файла',
+        variant: 'destructive'
+      })
+      return
+    }
 
-    // if (!name || !file.type.includes("image")) {
-    //   alert("Неверный тип файла");
-    //   reject();
-    //   return;
-    // }
+    setFiles(prev => {
+      if (prev.includes(file)) {
+        console.log(123123);
 
-    formData.append(file.name, file);
+        toast({
+          title: 'Изображние уже загружено',
+          variant: 'destructive'
+        })
+        return prev
+      }
+      return [...prev, file]
+    })
 
-  };
+    toast({
+      title: 'Изображение загружено',
+      variant: 'default'
+    })
+  }
 
   const removeFile = (file: File) => {
-    console.log(file.name);
-    console.log(Array.from(formData.values()))
-
-    formData.delete(file.name)
+    setFiles(prev => prev.filter(el => el.name != file.name))
   }
 
   const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
@@ -116,8 +135,8 @@ export function InputForm() {
 
         <div>
           <p className="text-sm ml-[15px]">Прикрепить фото</p>
-          <Button className="rounded-2xl bg-slate-800 text-white relative" type="button" onClick={() => handleFiles()}>Загрузить файлы</Button>
-          <Input className="hidden" ref={fileRef} multiple type="file"></Input>
+          <Button className="rounded-2xl bg-slate-800 text-white relative" type="button" onClick={() => clickInput()}>{files.length == 0 ? "Загрузить файлы" : "Загружено " + files.length + " файлов"}</Button>
+          <Input className="hidden" ref={fileRef} multiple type="file" onChange={(e) => handleChange(e)}></Input>
         </div>
 
         <div className="flex items-center justify-center pt-2">
@@ -144,10 +163,12 @@ export function InputForm() {
           </Button>
 
           <div className="flex-1 flex items-center justify-center">
-            <FilesCarousel removeFile={removeFile} files={Array.from(formData.values()) as File[]}></FilesCarousel>
+            <FilesCarousel removeFile={removeFile} files={files}></FilesCarousel>
           </div>
 
-          <Button onClick={() => addFile()} className="w-full mt-4 bg-slate-900">
+          <Button
+            onClick={() => fileRef.current?.click()}
+            className="w-full mt-4 bg-slate-900">
             Добавить изображение
           </Button>
         </DialogContent>

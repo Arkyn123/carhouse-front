@@ -17,9 +17,9 @@ export function formatPhoneNumber(value: string): string {
   if (value.length > 3 && value.length <= 6) {
     formattedValue += value.slice(3)
   } else if (value.length > 6 && value.length <= 8) {
-    formattedValue += value.slice(3, 6) + ' ' + value.slice(6, 8)
+    formattedValue += value.slice(3, 6) + '-' + value.slice(6, 8)
   } else if (value.length > 8) {
-    formattedValue += value.slice(3, 6) + ' ' + value.slice(6, 8) + ' ' + value.slice(8, 10)
+    formattedValue += value.slice(3, 6) + '-' + value.slice(6, 8) + '-' + value.slice(8, 10)
   }
 
   if (!formattedValue) return formattedValue
@@ -28,7 +28,7 @@ export function formatPhoneNumber(value: string): string {
 
 const PhoneInput = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
-    <Input maxLength={19} placeholder="+7 (999) 999 99 99" {...props} ref={ref} />
+    <Input maxLength={19} placeholder="+7 (999) 999-99-99" {...props} ref={ref} />
   );
 });
 
