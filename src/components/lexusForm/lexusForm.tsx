@@ -13,10 +13,10 @@ export default function LexusForm() {
 
     return (
         <div className="relative h-[570px] bg-slate-600" >
-            <section className="relative pt-[30px] pl-[20%] text-[230%] text-slate-100">
-                <div className="font-extrabold">
-                    КУПИМ ВАШ АВТОМОБИЛЬ
-                    <p className="-mt-3">ПО НОВЫМ ЦЕНАМ {year}Г</p>
+            <section className="relative pt-[30px] pl-[20%] text-[230%] text-slate-100 ">
+                <div className="font-extrabold uppercase">
+                    Купим ваш автомобиль
+                    <p className="-mt-3">По новым ценам {year}г</p>
                 </div>
 
                 <div className="text-[60%] font-medium">

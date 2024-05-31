@@ -8,14 +8,11 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { Input } from "../ui/input"
-import { FormEvent, FormEventHandler, useEffect, useRef, useState, SyntheticEvent, ChangeEvent } from "react"
+import { FormEvent, useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
-import Image from "next/image"
 import PhoneInput, { formatPhoneNumber } from "../shared/phoneInput"
 import { FilesCarousel } from "./filesCarousel"
-import { useFormState } from "react-dom"
 import { sendDataToBot } from "./_actions"
-import { AxiosResponse } from "axios"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -57,39 +54,43 @@ export function InputForm() {
   }
 
   const handleChange = (e: any) => {
-    const file = e.target.files[0] as File
+    const filesArr = Array.from(e.target.files) as File[]
 
-    if (!file) return
+    filesArr.forEach(file => {
+      {
+        if (!file) return
 
-    if (!file.type.includes('image')) {
-      toast({
-        title: 'Неверный тип файла',
-        variant: 'destructive'
-      })
-      return
-    }
+        if (!file.type.includes('image')) {
+          toast({
+            title: 'Неверный тип файла',
+            variant: 'destructive'
+          })
+          return
+        }
 
-    setFiles(prev => {
-      if (prev.includes(file)) {
-        console.log(123123);
+        setFiles(prev => {
+          if (prev.some(el => el.name == file.name)) {
 
-        toast({
-          title: 'Изображние уже загружено',
-          variant: 'destructive'
+            toast({
+              title: 'Изображние уже загружено',
+              variant: 'destructive'
+            })
+            return prev
+          }
+
+          toast({
+            title: 'Изображение загружено',
+            variant: 'default'
+          })
+          return [...prev, file]
         })
-        return prev
       }
-      return [...prev, file]
-    })
-
-    toast({
-      title: 'Изображение загружено',
-      variant: 'default'
     })
   }
 
   const removeFile = (file: File) => {
     setFiles(prev => prev.filter(el => el.name != file.name))
+    if (files.length == 1) setFilesDialog(false)
   }
 
   const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
