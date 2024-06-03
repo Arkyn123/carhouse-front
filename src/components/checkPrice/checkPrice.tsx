@@ -9,6 +9,6 @@ export default function CheckPrice() {
                 Узнайте предварительную <br />
                 стоимость вашего автомобиля
             </div>
-            <QuizCard className="pl-[20%]"></QuizCard>
+            <QuizCard></QuizCard>
         </div>)
 }
