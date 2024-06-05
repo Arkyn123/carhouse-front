@@ -38,7 +38,11 @@ export function InputForm() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const res = await sendDataToBot(data, files)
 
-    if (res!.data.ok) setOkDialog(true)
+    if (res!.data.ok) {
+      form.reset()
+      setFiles([])
+      setOkDialog(true)
+    }
     else {
       toast({
         title: 'Ошибка при отправке',

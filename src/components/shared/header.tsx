@@ -15,7 +15,7 @@ export default function Header() {
                     width={250}
                 />
             </a>
-            <div className="fixed flex items-center justify-center left-[62.5%] gap-6">
+            <div className="fixed flex items-center justify-center left-[65%] gap-4">
                 <p className="text-[110%] font-medium mr-6">+7 (963) 478-67-27</p>
                 <a href="https://api.whatsapp.com/send/?phone=79925027262&text&type=phone_number&app_absent=0" className="size-sm">
                     <Image
