@@ -1,35 +1,17 @@
-import { useForm } from "react-hook-form";
 import { CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Input } from "../ui/input"
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Slider } from "@/components/ui/slider"
 import { useEffect, useState } from "react";
-import { Checkbox } from "@radix-ui/react-checkbox";
-import { Button } from "../ui/button";
 import ConditionButton from "./conditionButton";
 
 type Props = {
   step: number
+  setStep: Function
+  form: any
 }
 
-export default function QuizContent({ step }: Props) {
-
-  const FormSchema = z.object({
-    model: z.string(),
-    mileage: z.string(),
-    condition: z.string().array()
-  })
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      model: "",
-      mileage: "130 000",
-      condition: []
-    },
-  })
+export default function QuizContent({ step, setStep, form }: Props) {
 
   function formatMileage(val: string) {
     val = val.replace(/\D/g, '').replace(/\s/g, '')
@@ -46,14 +28,13 @@ export default function QuizContent({ step }: Props) {
     return beforeLastThree + ' ' + lastThree;
   }
 
-  const onSubmit = () => {
-    console.log("sueta");
+  const handleChoose = (e: any, field: any) => {
+    if (!e.target.textContent) return
+    if (e.target.tagName != "BUTTON") return
 
-  }
-
-  const onError = () => {
-
-
+    if (field.value == e.target.textContent) field.onChange("")
+    else field.onChange(e.target.textContent)
+    return setStep((prev: number) => prev < 5 ? prev + 1 : 5)
   }
 
   return (
@@ -66,7 +47,7 @@ export default function QuizContent({ step }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
+            <form onSubmit={form.handleSubmit()} className="space-y-4">
               <FormField
                 control={form.control}
                 name="model"
@@ -90,7 +71,7 @@ export default function QuizContent({ step }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
+            <form onSubmit={form.handleSubmit()} className="space-y-4">
               <FormField
                 control={form.control}
                 name="mileage"
@@ -124,8 +105,7 @@ export default function QuizContent({ step }: Props) {
                         <span className="-ml -mt-2">5 000</span>
                         <span className="-mr- -mt-2">500 000</span>
                       </div>
-                    </>
-                  );
+                    </>)
                 }}
               />
             </form>
@@ -141,26 +121,106 @@ export default function QuizContent({ step }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
+            <form onSubmit={form.handleSubmit()} className="space-y-4">
               <FormField
                 control={form.control}
                 name="condition"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      {/* <Input className="bg-slate-200 p-6 text-slate-700 text-xl" placeholder="Например: Kia Rio 2012" {...field} /> */}
-                      <div className="grid grid-cols-2 gap-4 mt-12">
-                        <ConditionButton text="В отличном состоянии" />
-                        <ConditionButton text="Машина на ходу (нужен мелкий ремонт)" />
-                        <ConditionButton text="фывфывфывфывфывфывфывasdasdasdasdasdasdasdasdsad" />
+                    <FormControl onClick={(e) => handleChoose(e, field)}>
+                      <div className="grid grid-cols-2 gap-5 mt-12">
+                        <ConditionButton text="В отличном состоянии" value={field.value} />
+                        <ConditionButton text="Машина на ходу (нужен мелкий ремонт)" value={field.value} />
+                        <ConditionButton text="Машина неисправна (нужен капитальный ремонт)" value={field.value} />
+                        <ConditionButton text="Машина после аварии" value={field.value} />
                       </div>
+                    </FormControl>
+                  </FormItem>)
+                } />
+            </form>
+          </Form>
+        </CardContent>
+      </>}
 
+      {step == 3 && <>
+        <CardHeader>
+          <CardTitle className="font-normal">
+            Укажите юридические сведения об автомобиле
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit()} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="legal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl onClick={(e) => handleChoose(e, field)}>
+                      <div className="grid grid-cols-2 gap-5 mt-12">
+                        <ConditionButton text="Юридически чистый автомобиль" value={field.value} />
+                        <ConditionButton text="Имеется ограничение на регистрацию" value={field.value} />
+                        <ConditionButton text="Имеется арест" value={field.value} />
+                        <ConditionButton text="Имеется залог" value={field.value} />
+                        <ConditionButton text="Имеется автокредит" value={field.value} />
+                      </div>
+                    </FormControl>
+                  </FormItem>)
+                } />
+            </form>
+          </Form>
+        </CardContent>
+      </>}
+
+      {step == 4 && <>
+        <CardHeader>
+          <CardTitle className="font-normal">
+            Когда планируете продать машину?
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit()} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="urgency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl onClick={(e) => handleChoose(e, field)}>
+                      <div className="grid grid-cols-2 gap-5 mt-12">
+                        <ConditionButton text="Срочно (сегодня/завтра)" value={field.value} />
+                        <ConditionButton text="В ближайшее время (1-2 недели)" value={field.value} />
+                        <ConditionButton text="Пока просто прицениваюсь" value={field.value} />
+                      </div>
+                    </FormControl>
+                  </FormItem>)
+                } />
+            </form>
+          </Form>
+        </CardContent>
+      </>}
+
+      {step == 5 && <>
+        <CardHeader>
+          <CardTitle className="font-normal">
+            Укажите желаемую цену за авто
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit()} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input className="bg-slate-200 p-6 text-slate-700 text-xl" placeholder="Например: 700 000 рублей" {...field} />
                     </FormControl>
                   </FormItem>
                 )} />
             </form>
           </Form>
-
         </CardContent>
       </>}
     </>

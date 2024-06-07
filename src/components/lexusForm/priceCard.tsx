@@ -131,7 +131,7 @@ export function InputForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
-                <PhoneInput className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" {...field}></PhoneInput>
+                <PhoneInput className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" {...field}/>
               </FormControl>
               {/* <FormMessage className="text-red-500 text-sm text-center" /> */}
             </FormItem>
