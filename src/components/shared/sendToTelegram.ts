@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const ChatID = '467827020'
 
-export const sendDataToBot = async (data: any, files: File[]) => {
+export const sendDataToBot = async (data: any, files: File[] = []) => {
     try {
         if (!process.env.NEXT_PUBLIC_BOT_TOKEN) {
             throw new Error('BOT_TOKEN environment variable is not set');
@@ -37,6 +37,18 @@ const sendMediaGroup = async (files: File[]) => {
 const sendMessage = async (data: any) => {
     return await axios.post(`https://api.telegram.org/bot${process.env.NEXT_PUBLIC_BOT_TOKEN}/sendMessage`, {
         chat_id: ChatID,
-        text: `✅ Новый заказ ✅\nНомер телефона: ${data.phoneNumber}\nМодель: ${data.model}`,
+        text: generateMessage(data),
     });
 }
+
+const generateMessage = (data: any) => {
+    let text = '✅ Новый заказ ✅\n';
+    if (data.model) text += `Модель: ${data.model}\n`;
+    if (data.mileage) text += `Пробег: ${data.mileage}\n`;
+    if (data.condition) text += `Состояние: ${data.condition}\n`;
+    if (data.legal) text += `Юридический статус: ${data.legal}\n`;
+    if (data.urgency) text += `Срочность: ${data.urgency}\n`;
+    if (data.price) text += `Цена: ${data.price}\n`;
+    if (data.phoneNumber) text += `Номер телефона: ${data.phoneNumber}\n`;
+    return text;
+};

@@ -1,8 +1,8 @@
-
 import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
 import { cn } from "@/lib/utils"
+import { Input } from "../ui/input"
 
 type Props = {
     text: string

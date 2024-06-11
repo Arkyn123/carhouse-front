@@ -10,9 +10,9 @@ import { toast } from "@/components/ui/use-toast"
 import { Input } from "../ui/input"
 import { FormEvent, useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
-import PhoneInput, { formatPhoneNumber } from "../shared/phoneInput"
+import PhoneInput, { formatPhoneNumber } from "../ui/phoneInput"
 import { FilesCarousel } from "./filesCarousel"
-import { sendDataToBot } from "./_actions"
+import { sendDataToBot } from "../shared/sendToTelegram"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -100,7 +100,7 @@ export function InputForm() {
   const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
     if (!e) return
 
-    form.setValue("phoneNumber", formatPhoneNumber(e.currentTarget.value))
+    form.setValue("phoneNumber", formatPhoneNumber((e.target as HTMLInputElement).value))
   }
 
   function onError(errors: any) {
@@ -120,7 +120,7 @@ export function InputForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input className="text-slate-900 bg-slate-100 p-5 text-left text-base rounded-2xl" placeholder="Марка, модель и год выпуска" {...field} />
+                <Input className="bg-slate-100 p-5 text-left text-base rounded-2xl focus-visible:ring-offset-0 focus-visible:ring-0" placeholder="Марка, модель и год выпуска" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -131,21 +131,21 @@ export function InputForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
-                <PhoneInput className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" {...field}/>
+                <PhoneInput className="p-5 text-left rounded-2xl" {...field} />
               </FormControl>
               {/* <FormMessage className="text-red-500 text-sm text-center" /> */}
             </FormItem>
           )}
         />
 
-        <div>
-          <p className="text-sm ml-[15px]">Прикрепить фото</p>
-          <Button className="rounded-2xl bg-slate-800 text-white relative" type="button" onClick={() => clickInput()}>{files.length == 0 ? "Загрузить файлы" : "Загружено " + files.length + " файлов"}</Button>
+        <div className="flex flex-col w-[50%] items-start justify-center">
+          <p className="ml-3 text-[90%]">Прикрепить фото</p>
+          <Button className="rounded-xl bg-slate-800 text-white relative text-center w-max-[60%]" type="button" onClick={() => clickInput()}>{files.length == 0 ? "Загрузить файлы" : "Загружено " + files.length + " файлов"}</Button>
           <Input className="hidden" ref={fileRef} multiple type="file" onChange={(e) => handleChange(e)}></Input>
         </div>
 
         <div className="flex items-center justify-center pt-2">
-          <Button className="relative px-[70px] py-[30px] rounded-full bg-slate-800 text-white text-lg uppercase font-bold btn-alt" type="submit">Оценить авто</Button>
+          <Button className="px-[70px] py-[30px] rounded-full bg-slate-800 text-white text-[110%] uppercase font-bold tracking-wide" type="submit">Оценить авто</Button>
         </div>
 
       </form>

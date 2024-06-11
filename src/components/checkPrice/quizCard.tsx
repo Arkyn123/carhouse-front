@@ -1,11 +1,12 @@
 'use client'
 
+import { IoIosWarning } from "react-icons/io";
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi"
 import { Progress } from "@/components/ui/progress"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import workerImage from '@public/worker_image.jpg'
 import Image from "next/image"
 import QuizContent from "./quizContent"
@@ -14,7 +15,9 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "../ui/input"
-import PhoneInput from "../shared/phoneInput"
+import PhoneInput, { formatPhoneNumber } from "../ui/phoneInput"
+import { cn } from "@/lib/utils"
+import { sendDataToBot } from "../shared/sendToTelegram"
 
 type Props = {
     className?: string
@@ -22,6 +25,8 @@ type Props = {
 
 export default function QuizCard({ className }: Props) {
     const [step, setStep] = useState(0)
+    const [agree, setAgree] = useState(false)
+    const [checkAgree, setCheckAgree] = useState(false)
 
     const FormSchema = z.object({
         model: z.string(),
@@ -29,7 +34,8 @@ export default function QuizCard({ className }: Props) {
         condition: z.string(),
         legal: z.string(),
         urgency: z.string(),
-        price: z.string()
+        price: z.string(),
+        phoneNumber: z.string()
     })
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -40,11 +46,24 @@ export default function QuizCard({ className }: Props) {
             condition: "",
             legal: "",
             urgency: "",
-            price: ""
+            price: "",
+            phoneNumber: ""
         }
     })
 
+    const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
+        if (!e) return
+
+        form.setValue("phoneNumber", formatPhoneNumber((e.target as HTMLInputElement).value))
+    }
+
     const onSubmit = () => {
+
+        if (!agree) {
+            setCheckAgree(true)
+            return
+        }
+        sendDataToBot(form.getValues())
 
     }
 
@@ -53,11 +72,11 @@ export default function QuizCard({ className }: Props) {
     }
 
     if (step == 6) return (
-        <div className="pl-[23%] pt-5 flex">
+        <div className="pl-[23%] pt-5 flex" onClick={(e) => { if ((e.target as HTMLElement).tagName != "BUTTON") setCheckAgree(false) }}>
 
             <Card className="w-[73%] h-[600px] mb-10 flex flex-col items-center justify-center">
                 <CardHeader>
-                    <span className="text-center mt-12 text-3xl font-sans font-normal">
+                    <span className="text-center text-3xl font-sans font-normal">
                         Заполните форму, чтобы получить <br /> оценку стоимости своего автомобиля
                     </span>
                     <span className="text-center text-lg font-sans font-light" >
@@ -65,24 +84,59 @@ export default function QuizCard({ className }: Props) {
                     </span>
                 </CardHeader>
 
-                <CardContent>
+                <CardContent className="border border-slate-300 rounded-sm w-[45%] h-auto" style={{ boxShadow: '0 0 600px rgba(0, 0, 0, 0.2)' }}>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
                             <FormField
                                 control={form.control}
-                                name="price"
+                                name="phoneNumber"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="flex flex-col mt-8">
                                         <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
-                                            <PhoneInput className="text-slate-900 p-5 bg-slate-100 text-left text-base rounded-2xl" {...field} />
+                                            <div>
+                                                <span className="uppercase font-bold text-slate-500 text-[90%] -mb-2">Введите телефон</span>
+                                                <PhoneInput className="p-6 !pl-12" {...field} />
+                                            </div>
                                         </FormControl>
                                     </FormItem>
                                 )} />
                         </form>
                     </Form>
+
+                    <Button
+                        className="rounded-full mt-[10%] w-full px-[70px] py-[30px] bg-slate-800 text-white text-[110%] font-semibold text-center tracking-wide"
+                        onClick={() => onSubmit()}
+                    >
+                        Получить расчет стоимости
+                    </Button>
+
+                    <div className="m-4 !cursor-pointer flex justify-center items-center" onClick={() => setAgree(!agree)}>
+
+                        <Input type="checkbox" checked={agree} className={cn(checkAgree ? "border-2 border-red-500" : "", "mr-2 h-8 w-8")} />
+
+
+
+                        <span className="text-pretty text-left text-[90%] text-slate-900">Я соглашаюсь на&nbsp;
+                            <a href="/" className="underline hover:text-slate-500 hover:no-underline">обработку персональный данных </a>
+                            согласно&nbsp;
+                            <a href="/" className="underline hover:text-slate-500 hover:no-underline">политике конфиденциальности</a>
+                        </span>
+
+                    </div>
+
+                    {checkAgree && (
+                        <div className="flex flex-col relative">
+                            <div className="z-10 absolute -top-4 left-[16px] w-0 h-0 border-l-[10px] border-l-transparent border-b-[17px] border-b-slate-300 border-r-[10px] border-r-transparent"></div>
+                            <div className="absolute -top-4 left-[13px] w-0 h-0 border-l-[13px] border-l-transparent border-b-[20px] border-b-black border-r-[13px] border-r-transparent"></div>
+                            <div className="pl-2 flex absolute right-[5%] w-[160%] h-auto bg-slate-300 text-left text-balance whitespace-normal overflow-auto border-[0.5px] border-black">
+                                <IoIosWarning size={50} />
+                                <span className="pl-2">Пожалуйста, ознакомьтесь и примите Положение об обработке персональных данных и Политику конфиденциальности, поставив галочку</span>
+                            </div>
+                        </div>
+                    )}
                 </CardContent>
 
-                <CardFooter className="flex justify-end gap-3 mt-auto pt-5">
+                <CardFooter className="">
 
 
                 </CardFooter>
