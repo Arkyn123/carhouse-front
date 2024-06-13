@@ -2,13 +2,16 @@ import { CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Input } from "../ui/input"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Slider } from "@/components/ui/slider"
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import ConditionButton from "./conditionButton";
+import { ControllerRenderProps, Field, UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+import { FormSchema } from "./quizCard";
 
 type Props = {
   step: number
   setStep: Function
-  form: any
+  form: UseFormReturn<z.infer<typeof FormSchema>, any, undefined>
 }
 
 export default function QuizContent({ step, setStep, form }: Props) {
@@ -28,13 +31,15 @@ export default function QuizContent({ step, setStep, form }: Props) {
     return beforeLastThree + ' ' + lastThree;
   }
 
-  const handleChoose = (e: any, field: any) => {
-    if (!e.target.textContent) return
-    if (e.target.tagName != "BUTTON") return
+  const handleChoose = (e: MouseEvent<HTMLElement, globalThis.MouseEvent>, field: ControllerRenderProps<z.infer<typeof FormSchema>, any>) => {
 
-    if (field.value == e.target.textContent) field.onChange("")
-    else field.onChange(e.target.textContent)
-    return setStep((prev: number) => prev < 5 ? prev + 1 : 5)
+    if (!(e.target as HTMLElement).textContent) return
+    if ((e.target as HTMLElement).tagName != "BUTTON") return
+
+    if (field.value == (e.target as HTMLElement).textContent) return field.onChange("")
+
+    field.onChange((e.target as HTMLElement).textContent)
+    setStep((prev: number) => (prev < 5) ? prev + 1 : 5)
   }
 
   return (
@@ -47,7 +52,7 @@ export default function QuizContent({ step, setStep, form }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit()} className="space-y-4">
+            <form className="space-y-4">
               <FormField
                 control={form.control}
                 name="model"
@@ -71,7 +76,7 @@ export default function QuizContent({ step, setStep, form }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit()} className="space-y-4">
+            <form className="space-y-4">
               <FormField
                 control={form.control}
                 name="mileage"
@@ -121,13 +126,16 @@ export default function QuizContent({ step, setStep, form }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit()} className="space-y-4">
+            <form className="space-y-4">
               <FormField
                 control={form.control}
                 name="condition"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl onClick={(e) => handleChoose(e, field)}>
+                    <FormControl onClick={(e) => {
+                      e.preventDefault()
+                      handleChoose(e, field)
+                    }}>
                       <div className="grid grid-cols-2 gap-5 mt-12">
                         <ConditionButton text="В отличном состоянии" value={field.value} />
                         <ConditionButton text="Машина на ходу (нужен мелкий ремонт)" value={field.value} />
@@ -150,13 +158,16 @@ export default function QuizContent({ step, setStep, form }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit()} className="space-y-4">
+            <form className="space-y-4">
               <FormField
                 control={form.control}
                 name="legal"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl onClick={(e) => handleChoose(e, field)}>
+                    <FormControl onClick={(e) => {
+                      e.preventDefault()
+                      handleChoose(e, field)
+                    }}>
                       <div className="grid grid-cols-2 gap-5 mt-12">
                         <ConditionButton text="Юридически чистый автомобиль" value={field.value} />
                         <ConditionButton text="Имеется ограничение на регистрацию" value={field.value} />
@@ -180,13 +191,16 @@ export default function QuizContent({ step, setStep, form }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit()} className="space-y-4">
+            <form className="space-y-4">
               <FormField
                 control={form.control}
                 name="urgency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl onClick={(e) => handleChoose(e, field)}>
+                    <FormControl onClick={(e) => {
+                      e.preventDefault()
+                      handleChoose(e, field)
+                    }}>
                       <div className="grid grid-cols-2 gap-5 mt-12">
                         <ConditionButton text="Срочно (сегодня/завтра)" value={field.value} />
                         <ConditionButton text="В ближайшее время (1-2 недели)" value={field.value} />
@@ -208,7 +222,7 @@ export default function QuizContent({ step, setStep, form }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit()} className="space-y-4">
+            <form className="space-y-4">
               <FormField
                 control={form.control}
                 name="price"
