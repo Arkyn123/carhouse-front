@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { HiArrowLeft, HiArrowRight, HiCheck } from "react-icons/hi"
 import { Progress } from "@/components/ui/progress"
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import workerImage from '@public/worker_image.jpg'
 import Image from "next/image"
 import QuizContent from "./quizContent"
 import { z } from "zod"
-import { useForm } from "react-hook-form"
+import { FieldErrors, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "../ui/input"
@@ -21,6 +21,7 @@ import { sendDataToBot } from "../shared/sendToTelegram"
 import { motion, AnimatePresence } from "framer-motion";
 import { CiWarning } from "react-icons/ci";
 import { toast } from "../ui/use-toast";
+import { GlobalContext, GlobalContextType } from "../shared/global";
 
 type Props = {
     className?: string
@@ -41,6 +42,8 @@ export default function QuizCard({ className }: Props) {
     const [agree, setAgree] = useState(false)
     const [checkAgree, setCheckAgree] = useState(false)
     const [checkPhone, setCheckPhone] = useState(false)
+
+    const { globalVariable } = useContext(GlobalContext) as GlobalContextType
 
     useEffect(() => {
         document.addEventListener('click', () => {
@@ -100,7 +103,7 @@ export default function QuizCard({ className }: Props) {
             return
         }
 
-        const res = await sendDataToBot(form.getValues())
+        const res = await sendDataToBot(form.getValues(), [], globalVariable)
 
         if (!res?.data.ok) {
             toast({
@@ -113,7 +116,7 @@ export default function QuizCard({ className }: Props) {
         setStep(prev => prev + 1)
     }
 
-    const onError = (errors: any) => {
+    const onError = (errors: FieldErrors<z.infer<typeof FormSchema>>) => {
         setCheckPhone(true)
     }
 

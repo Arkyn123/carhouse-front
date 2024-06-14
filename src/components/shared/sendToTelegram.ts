@@ -1,14 +1,14 @@
+'use client'
+
 import axios from 'axios'
 
-const ChatID = '467827020'
-
-export const sendDataToBot = async (data: any, files: File[] = []) => {
+export const sendDataToBot = async (data: any, files: File[] = [], ChatID: string) => {
     try {
         if (!process.env.NEXT_PUBLIC_BOT_TOKEN) {
-            throw new Error('BOT_TOKEN environment variable is not set');
+            throw new Error('BOT_TOKEN environment variable is not set')
         }
-        const res = await sendMessage(data)
-        if (files.length) return await sendMediaGroup(files)
+        const res = await sendMessage(data, ChatID)
+        if (files.length) return await sendMediaGroup(files, ChatID)
         return res
 
     } catch (error: any) {
@@ -16,14 +16,14 @@ export const sendDataToBot = async (data: any, files: File[] = []) => {
     }
 }
 
-const sendMediaGroup = async (files: File[]) => {
+const sendMediaGroup = async (files: File[], ChatID: string) => {
     const formData = new FormData();
     formData.append('chat_id', ChatID);
 
     const mediaArray = files.map((file, index) => {
-        formData.append(`photo${index}`, file);
-        return { type: 'photo', media: `attach://photo${index}` };
-    });
+        formData.append(`photo${index}`, file)
+        return { type: 'photo', media: `attach://photo${index}` }
+    })
 
     formData.append('media', JSON.stringify(mediaArray));
 
@@ -34,7 +34,7 @@ const sendMediaGroup = async (files: File[]) => {
     })
 }
 
-const sendMessage = async (data: any) => {
+const sendMessage = async (data: any, ChatID: string) => {
     return await axios.post(`https://api.telegram.org/bot${process.env.NEXT_PUBLIC_BOT_TOKEN}/sendMessage`, {
         chat_id: ChatID,
         text: generateMessage(data),

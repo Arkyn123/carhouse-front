@@ -8,12 +8,13 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { Input } from "../ui/input"
-import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react"
+import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
 import PhoneInput, { formatPhoneNumber } from "../ui/phoneInput"
 import { FilesCarousel } from "./filesCarousel"
 import { sendDataToBot } from "../shared/sendToTelegram"
 import { cn } from "@/lib/utils"
+import { GlobalContext, GlobalContextType } from "../shared/global"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -27,12 +28,14 @@ export function InputForm() {
   const [files, setFiles] = useState<File[]>([])
   const [checkPhone, setCheckPhone] = useState(false)
 
-  useEffect(() => {
-      document.addEventListener('click', () => setCheckPhone(false));
+  const { globalVariable } = useContext(GlobalContext) as GlobalContextType
 
-      return () => {
-          document.removeEventListener('click', () => setCheckPhone(false));
-      }
+  useEffect(() => {
+    document.addEventListener('click', () => setCheckPhone(false));
+
+    return () => {
+      document.removeEventListener('click', () => setCheckPhone(false));
+    }
   }, [])
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -46,9 +49,9 @@ export function InputForm() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const res = await sendDataToBot(data, files)
+    const res = await sendDataToBot(data, files, globalVariable)
 
-    if (res!.data.ok) {
+    if (res?.data.ok) {
       form.reset()
       setFiles([])
       setOkDialog(true)
@@ -116,12 +119,7 @@ export function InputForm() {
 
   function onError(errors: FieldErrors<z.infer<typeof FormSchema>>) {
     if (errors.phoneNumber) setCheckPhone(true)
-
-    // toast({
-    //   title: Object.values(errors).map((el: any) => el.message).join(', '),
-    //   variant: "destructive"
-    // })
-  };
+  }
 
   return (
     <Form {...form}>
@@ -132,7 +130,7 @@ export function InputForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input className="bg-slate-100 p-5 text-left text-base rounded-2xl focus-visible:ring-offset-0 focus-visible:ring-0" placeholder="Марка, модель и год выпуска" {...field} />
+                <Input className="bg-slate-100 p-5 text-left text-base rounded-2xl focus-visible:outline-0 focus-visible:ring-offset-0 focus-visible:ring-0" placeholder="Марка, модель и год выпуска" {...field} />
               </FormControl>
             </FormItem>
           )}

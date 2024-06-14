@@ -2,7 +2,7 @@ import { CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Input } from "../ui/input"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Slider } from "@/components/ui/slider"
-import { MouseEvent, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import ConditionButton from "./conditionButton";
 import { ControllerRenderProps, Field, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
@@ -40,6 +40,27 @@ export default function QuizContent({ step, setStep, form }: Props) {
 
     field.onChange((e.target as HTMLElement).textContent)
     setStep((prev: number) => (prev < 5) ? prev + 1 : 5)
+  }
+
+  const handlePrice = (e: FormEvent<HTMLElement>, field: ControllerRenderProps<z.infer<typeof FormSchema>, any>) => {
+    // const price = (e.target as HTMLInputElement).value.replace(/\D/g, '').replace(/\s/g, '');
+    // console.log(price);
+
+    // function divideStringBy3FromEnd(str: string) {
+    //   let result = [];
+    //   let i = str.length - 1;
+    //   while (i >= 0) {
+    //     result.unshift(str.slice(i - 2 >= 0 ? i - 2 : 0, i + 1));
+    //     i -= 3;
+    //   }
+    //   return result.join(" ");
+    // }
+
+    // const formattedPrice = divideStringBy3FromEnd(price) + " ₽";
+    // console.log(formattedPrice);
+
+    // // Здесь вы можете обновить значение поля в форме
+    // field.onChange(formattedPrice);
   }
 
   return (
@@ -226,17 +247,21 @@ export default function QuizContent({ step, setStep, form }: Props) {
               <FormField
                 control={form.control}
                 name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input className="bg-slate-200 p-6 text-slate-700 text-xl" placeholder="Например: 700 000 рублей" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )} />
+                render={({ field }) => {
+
+                  const { value, ...rest } = field
+
+                  return (
+                    <FormItem>
+                      <FormControl onChange={(e) => handlePrice(e, field)}>
+                        <Input className="bg-slate-200 p-6 text-slate-700 text-xl focus-visible:outline-0 focus-visible:ring-offset-0 focus-visible:ring-0" placeholder="Например: 700 000 рублей" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )
+                }} />
             </form>
           </Form>
         </CardContent>
       </>}
-    </>
-  )
+    </>)
 }
