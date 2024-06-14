@@ -1,18 +1,19 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { FieldErrors, useForm } from "react-hook-form"
+import { ZodError, z } from "zod"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { Input } from "../ui/input"
-import { FormEvent, useRef, useState } from "react"
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
 import PhoneInput, { formatPhoneNumber } from "../ui/phoneInput"
 import { FilesCarousel } from "./filesCarousel"
 import { sendDataToBot } from "../shared/sendToTelegram"
+import { cn } from "@/lib/utils"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -24,6 +25,15 @@ export function InputForm() {
   const [okDialog, setOkDialog] = useState(false)
   const [filesDialog, setFilesDialog] = useState(false)
   const [files, setFiles] = useState<File[]>([])
+  const [checkPhone, setCheckPhone] = useState(false)
+
+  useEffect(() => {
+      document.addEventListener('click', () => setCheckPhone(false));
+
+      return () => {
+          document.removeEventListener('click', () => setCheckPhone(false));
+      }
+  }, [])
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -100,15 +110,17 @@ export function InputForm() {
   const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
     if (!e) return
 
+    setCheckPhone(false)
     form.setValue("phoneNumber", formatPhoneNumber((e.target as HTMLInputElement).value))
   }
 
-  function onError(errors: any) {
+  function onError(errors: FieldErrors<z.infer<typeof FormSchema>>) {
+    if (errors.phoneNumber) setCheckPhone(true)
 
-    toast({
-      title: Object.values(errors).map((el: any) => el.message).join(', '),
-      variant: "destructive"
-    })
+    // toast({
+    //   title: Object.values(errors).map((el: any) => el.message).join(', '),
+    //   variant: "destructive"
+    // })
   };
 
   return (
@@ -131,7 +143,7 @@ export function InputForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
-                <PhoneInput className="p-5 text-left rounded-2xl" {...field} />
+                <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "p-5 text-left rounded-2xl duration-150")} {...field} />
               </FormControl>
               {/* <FormMessage className="text-red-500 text-sm text-center" /> */}
             </FormItem>

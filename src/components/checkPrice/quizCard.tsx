@@ -42,6 +42,20 @@ export default function QuizCard({ className }: Props) {
     const [checkAgree, setCheckAgree] = useState(false)
     const [checkPhone, setCheckPhone] = useState(false)
 
+    useEffect(() => {
+        document.addEventListener('click', () => {
+            setCheckPhone(false)
+            setCheckAgree(false)
+        })
+
+        return () => {
+            document.removeEventListener('click', () => {
+                setCheckPhone(false)
+                setCheckAgree(false)
+            })
+        }
+    }, [])
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -112,7 +126,7 @@ export default function QuizCard({ className }: Props) {
                 </CardHeader>
 
                 <CardContent className="flex flex-col items-center justify-center gap-5 text-3xl font-light drop-shadow-2xl">
-                    Спасибо, данные успешно отправлены!
+                    Спасибо! Данные успешно отправлены.
                     <HiCheck className="text-[500%] text-green-500" />
                 </CardContent>
 
@@ -125,12 +139,7 @@ export default function QuizCard({ className }: Props) {
     )
 
     if (step == 6) return (
-        <div className="pl-[23%] pt-5 flex" onClick={(e) => {
-            if ((e.target as HTMLElement).tagName != "BUTTON") {
-                setCheckAgree(false)
-                setCheckPhone(false)
-            }
-        }}>
+        <div className="pl-[23%] pt-5 flex">
 
             <Card className="w-[73%] h-[600px] mb-10 flex flex-col items-center justify-center">
                 <CardHeader>
@@ -190,7 +199,7 @@ export default function QuizCard({ className }: Props) {
                                     <div className="absolute -top-6 left-[12.5px] w-0 h-0 border-l-[13px] border-l-transparent border-b-[20px] border-b-black border-r-[13px] border-r-transparent"></div>
                                     <div className="pl-2 flex absolute -top-3 right-[5%] w-[160%] h-auto bg-slate-300 text-left text-balance whitespace-normal overflow-auto border-[0.5px] border-black">
                                         <CiWarning size={50} />
-                                        <span className="pl-2">Пожалуйста, ознакомьтесь и примите Положение об обработке персональных данных и Политику конфиденциальности, поставив галочку</span>
+                                        <span className="pl-2 text-sm flex items-center justify-center">Пожалуйста, ознакомьтесь и примите Положение об обработке персональных данных и Политику конфиденциальности, поставив галочку</span>
                                     </div>
                                 </div>
                             </motion.div>)}

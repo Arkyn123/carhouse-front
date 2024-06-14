@@ -1,18 +1,17 @@
-import { cn } from "@/lib/utils";
-import { Ubuntu } from "next/font/google";
+'use client'
+
 import lexusImage from "@public/lexus.png"
 import okImage from "@public/ok.svg"
 import Image from "next/image"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-// import { InputForm } from "./priceCard";
-import { Toaster } from "../ui/toaster";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { InputForm } from "./priceCard";
+import { useEffect, useState } from "react";
 
 export default function LexusForm() {
     const year: string = new Date().toString().split(' ')[3]
 
     return (
-        <div className="relative h-[570px] bg-slate-600" >
+        <div className="relative h-[570px] bg-slate-600">
             <section className="relative pt-[30px] pl-[20%] text-[230%] text-slate-100 ">
                 <div className="font-extrabold uppercase">
                     Купим ваш автомобиль
@@ -59,7 +58,7 @@ export default function LexusForm() {
                     </div>
                 </div>
             </section>
-            
+
             <Image
                 className="relative bottom-[35%] left-[35%]"
                 alt="Lexus image"
@@ -77,7 +76,7 @@ export default function LexusForm() {
                 </CardHeader>
                 <CardContent className="h-full">
 
-                    <InputForm></InputForm>
+                    <InputForm/>
 
                 </CardContent>
             </Card>

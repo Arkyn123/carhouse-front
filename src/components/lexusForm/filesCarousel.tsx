@@ -18,7 +18,8 @@ type Props = {
 }
 
 export function FilesCarousel({ files, removeFile }: Props) {
-    if (!files.length) return (<div className="bg-slate-300/60 p-3 rounded-2xl shadow-sm shadow-slate-500/50 border-slate-700">Изображений не найдено</div>)
+
+        if (!files.length) return (<div className="bg-slate-300/60 p-3 rounded-2xl shadow-sm shadow-slate-500/50 border-slate-700">Изображений не найдено</div>)
     return (
         <Carousel className="w-full max-w-xs">
             <CarouselContent>
