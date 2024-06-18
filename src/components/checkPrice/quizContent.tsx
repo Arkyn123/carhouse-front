@@ -1,5 +1,5 @@
 import { CardContent, CardHeader, CardTitle } from "../ui/card"
-import { Input } from "../ui/input"
+import { Input } from "../ui/inputWithoutBorder"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Slider } from "@/components/ui/slider"
 import { FormEvent, MouseEvent, useEffect, useState } from "react";
@@ -7,6 +7,12 @@ import ConditionButton from "./conditionButton";
 import { ControllerRenderProps, Field, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { FormSchema } from "./quizCard";
+import ChooseModel from "./quizContent/chooseModel";
+import ChooseMileage from "./quizContent/chooseMileage";
+import ChooseCondition from "./quizContent/chooseCondition";
+import ChooseLegal from "./quizContent/chooseLegal";
+import ChooseUrgency from "./quizContent/chooseUrgency";
+import ChoosePrice from "./quizContent/choosePrice";
 
 type Props = {
   step: number
@@ -18,8 +24,6 @@ export default function QuizContent({ step, setStep, form }: Props) {
 
   function formatMileage(val: string) {
     val = val.replace(/\D/g, '').replace(/\s/g, '')
-
-    // if (+val > 500000 || val.length > 6) return val
 
     if (val.length <= 3) {
       return val
@@ -43,225 +47,21 @@ export default function QuizContent({ step, setStep, form }: Props) {
   }
 
   const handlePrice = (e: FormEvent<HTMLElement>, field: ControllerRenderProps<z.infer<typeof FormSchema>, any>) => {
-    // const price = (e.target as HTMLInputElement).value.replace(/\D/g, '').replace(/\s/g, '');
-    // console.log(price);
-
-    // function divideStringBy3FromEnd(str: string) {
-    //   let result = [];
-    //   let i = str.length - 1;
-    //   while (i >= 0) {
-    //     result.unshift(str.slice(i - 2 >= 0 ? i - 2 : 0, i + 1));
-    //     i -= 3;
-    //   }
-    //   return result.join(" ");
-    // }
-
-    // const formattedPrice = divideStringBy3FromEnd(price) + " ₽";
-    // console.log(formattedPrice);
-
-    // // Здесь вы можете обновить значение поля в форме
-    // field.onChange(formattedPrice);
+    return (e.target as HTMLInputElement).value
   }
 
   return (
     <>
-      {step == 0 && <>
-        <CardHeader>
-          <CardTitle className="font-normal">
-            Укажите марку, модель и год выпуска вашего автомобиля
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4">
-              <FormField
-                control={form.control}
-                name="model"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input className="bg-slate-200 p-6 text-slate-700 text-xl" placeholder="Например: Kia Rio 2012" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )} />
-            </form>
-          </Form>
-        </CardContent>
-      </>}
+      {step == 0 && <ChooseModel form={form} />}
 
-      {step == 1 && <>
-        <CardHeader>
-          <CardTitle className="font-normal">
-            Укажите пробег автомобиля
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4">
-              <FormField
-                control={form.control}
-                name="mileage"
-                render={({ field }) => {
-                  const [sliderValue, setSliderValue] = useState(130)
+      {step == 1 && <ChooseMileage form={form} />}
 
-                  useEffect(() => {
-                    setSliderValue(+form.getValues().mileage.replace(/\s/g, "") / 1000)
-                  }, [field.value]);
+      {step == 2 && <ChooseCondition form={form} handleChoose={handleChoose} />}
 
-                  return (
-                    <>
-                      <FormItem className="-mt-">
-                        <FormControl onChange={(e: any) => form.setValue("mileage", formatMileage(e.target.value))}>
-                          <Input maxLength={7} className="m-2 py-6 text-slate-700 text-xl max-w-[25%]" {...field} />
-                        </FormControl>
-                      </FormItem>
-                      <div className="pt-6">
-                        <Slider
-                          className="pt-2"
-                          value={[sliderValue]}
-                          onValueChange={(e: number[]) => setSliderValue(e[0])}
-                          onValueCommit={() => { form.setValue("mileage", formatMileage((sliderValue * 1000).toString())) }}
-                          max={500}
-                          min={5}
-                          step={5}
-                        />
-                      </div>
+      {step == 3 && <ChooseLegal form={form} handleChoose={handleChoose} />}
 
-                      <div className="flex justify-between text-sm font-sans">
-                        <span className="-ml -mt-2">5 000</span>
-                        <span className="-mr- -mt-2">500 000</span>
-                      </div>
-                    </>)
-                }}
-              />
-            </form>
-          </Form>
-        </CardContent>
-      </>}
+      {step == 4 && <ChooseUrgency form={form} handleChoose={handleChoose} />}
 
-      {step == 2 && <>
-        <CardHeader>
-          <CardTitle className="font-normal">
-            В каком состоянии находится ваш автомобиль?
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4">
-              <FormField
-                control={form.control}
-                name="condition"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl onClick={(e) => {
-                      e.preventDefault()
-                      handleChoose(e, field)
-                    }}>
-                      <div className="grid grid-cols-2 gap-5 mt-12">
-                        <ConditionButton text="В отличном состоянии" value={field.value} />
-                        <ConditionButton text="Машина на ходу (нужен мелкий ремонт)" value={field.value} />
-                        <ConditionButton text="Машина неисправна (нужен капитальный ремонт)" value={field.value} />
-                        <ConditionButton text="Машина после аварии" value={field.value} />
-                      </div>
-                    </FormControl>
-                  </FormItem>)
-                } />
-            </form>
-          </Form>
-        </CardContent>
-      </>}
-
-      {step == 3 && <>
-        <CardHeader>
-          <CardTitle className="font-normal">
-            Укажите юридические сведения об автомобиле
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4">
-              <FormField
-                control={form.control}
-                name="legal"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl onClick={(e) => {
-                      e.preventDefault()
-                      handleChoose(e, field)
-                    }}>
-                      <div className="grid grid-cols-2 gap-5 mt-12">
-                        <ConditionButton text="Юридически чистый автомобиль" value={field.value} />
-                        <ConditionButton text="Имеется ограничение на регистрацию" value={field.value} />
-                        <ConditionButton text="Имеется арест" value={field.value} />
-                        <ConditionButton text="Имеется залог" value={field.value} />
-                        <ConditionButton text="Имеется автокредит" value={field.value} />
-                      </div>
-                    </FormControl>
-                  </FormItem>)
-                } />
-            </form>
-          </Form>
-        </CardContent>
-      </>}
-
-      {step == 4 && <>
-        <CardHeader>
-          <CardTitle className="font-normal">
-            Когда планируете продать машину?
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4">
-              <FormField
-                control={form.control}
-                name="urgency"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl onClick={(e) => {
-                      e.preventDefault()
-                      handleChoose(e, field)
-                    }}>
-                      <div className="grid grid-cols-2 gap-5 mt-12">
-                        <ConditionButton text="Срочно (сегодня/завтра)" value={field.value} />
-                        <ConditionButton text="В ближайшее время (1-2 недели)" value={field.value} />
-                        <ConditionButton text="Пока просто прицениваюсь" value={field.value} />
-                      </div>
-                    </FormControl>
-                  </FormItem>)
-                } />
-            </form>
-          </Form>
-        </CardContent>
-      </>}
-
-      {step == 5 && <>
-        <CardHeader>
-          <CardTitle className="font-normal">
-            Укажите желаемую цену за авто
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4">
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => {
-
-                  const { value, ...rest } = field
-
-                  return (
-                    <FormItem>
-                      <FormControl onChange={(e) => handlePrice(e, field)}>
-                        <Input className="bg-slate-200 p-6 text-slate-700 text-xl focus-visible:outline-0 focus-visible:ring-offset-0 focus-visible:ring-0" placeholder="Например: 700 000 рублей" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )
-                }} />
-            </form>
-          </Form>
-        </CardContent>
-      </>}
+      {step == 5 && <ChoosePrice form={form} handlePrice={handlePrice} />}
     </>)
 }

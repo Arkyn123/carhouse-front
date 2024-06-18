@@ -5,36 +5,41 @@ import whatsappImage from "@public/whatsapp.svg"
 
 export default function Header() {
     return (
-        <header className="fixed top-0 w-full z-10 shadow-slate-700 shadow-md bg-white text-black py-8 flex justify-center items-center">
-            <a href="/" className="fixed left-[20%] flex col-1">
-                <Image
-                    className=""
-                    alt="Header image"
-                    height={250}
-                    src={headerImage}
-                    width={250}
-                />
-            </a>
-            <div className="fixed flex items-center justify-center left-[65%] gap-4">
-                <p className="text-[110%] font-medium mr-6">+7 (963) 478-67-27</p>
-                <a href="https://api.whatsapp.com/send/?phone=79925027262&text&type=phone_number&app_absent=0" className="size-sm">
+        <div className="fixed inset-x-0 top-0 z-30 bg-white py-2 shadow-slate-700 shadow-md">
+            <div className="container flex flex-row justify-between items-center">
+
+                <a href="/">
                     <Image
-                        className="flex"
-                        alt="Telergam image"
-                        height={30}
-                        src={whatsappImage}
-                        width={30}
+                        alt="Header image"
+                        width={250}
+                        src={headerImage}
                     />
                 </a>
-                <a href="https://tlgg.ru/carhouse74" className="size-sm">
-                    <Image
-                        className="flex"
-                        alt="Telergam image"
-                        height={30}
-                        src={telegramImage}
-                        width={30}
-                    />
-                </a>
+
+                <div className="flex flex-row justify-center items-center gap-4">
+                    <p className="text-[110%] font-medium mr-6">+7 (963) 478-67-27</p>
+
+                    <a href="https://api.whatsapp.com/send/?phone=79925027262&text&type=phone_number&app_absent=0" className="size-sm">
+                        <Image
+                            className="flex"
+                            alt="Telergam image"
+                            height={30}
+                            src={whatsappImage}
+                            width={30}
+                        />
+                    </a>
+                    <a href="https://tlgg.ru/carhouse74" className="size-sm">
+                        <Image
+                            className="flex"
+                            alt="Telergam image"
+                            height={30}
+                            src={telegramImage}
+                            width={30}
+                        />
+                    </a>
+                </div>
+
             </div>
-        </header>)
+        </div>
+    )
 }

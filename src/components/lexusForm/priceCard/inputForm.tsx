@@ -2,19 +2,20 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FieldErrors, useForm } from "react-hook-form"
-import { ZodError, z } from "zod"
+import { z } from "zod"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
-import { Input } from "../ui/input"
-import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useRef, useState } from "react"
+import { Input } from "@/components/ui/inputWithoutBorder"
+import { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from "react"
 import { HiCheck, HiX } from "react-icons/hi";
-import PhoneInput, { formatPhoneNumber } from "../ui/phoneInput"
-import { FilesCarousel } from "./filesCarousel"
-import { sendDataToBot } from "../shared/sendToTelegram"
+import PhoneInput, { formatPhoneNumber } from "@/components/ui/phoneInput"
+import { sendDataToBot } from "@/components/shared/sendToTelegram"
 import { cn } from "@/lib/utils"
-import { GlobalContext, GlobalContextType } from "../shared/global"
+import { GlobalContext, GlobalContextType } from "@/components/shared/global"
+import FilesDialog from "./filesDialog"
+import OkDialog from "./okDialog"
 
 const FormSchema = z.object({
   model: z.string(),
@@ -70,7 +71,7 @@ export function InputForm() {
     else setFilesDialog(true)
   }
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const filesArr = Array.from(e.target.files) as File[]
 
     filesArr.forEach(file => {
@@ -105,11 +106,6 @@ export function InputForm() {
     })
   }
 
-  const removeFile = (file: File) => {
-    setFiles(prev => prev.filter(el => el.name != file.name))
-    if (files.length == 1) setFilesDialog(false)
-  }
-
   const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
     if (!e) return
 
@@ -130,7 +126,7 @@ export function InputForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input className="bg-slate-100 p-5 text-left text-base rounded-2xl focus-visible:outline-0 focus-visible:ring-offset-0 focus-visible:ring-0" placeholder="Марка, модель и год выпуска" {...field} />
+                <Input className="bg-slate-100 p-5 text-left text-base rounded-2xl" placeholder="Марка, модель и год выпуска" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -143,7 +139,6 @@ export function InputForm() {
               <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
                 <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "p-5 text-left rounded-2xl duration-150")} {...field} />
               </FormControl>
-              {/* <FormMessage className="text-red-500 text-sm text-center" /> */}
             </FormItem>
           )}
         />
@@ -160,35 +155,9 @@ export function InputForm() {
 
       </form>
 
-      <Dialog open={okDialog}>
-        <DialogContent className="flex flex-col items-center border-none min-w-[300px] w-[20%] h-[15%] bg-white">
-          <Button className="-p-4 -m-5 sticky left-[100%] aspect-square text-red-500 text-xl bg-white hover:bg-white" onClick={() => setOkDialog(false)}><HiX /></Button>
-          <HiCheck className="text-center text-[500%] text-green-500" />
-          <p className="text-center text-black text-[90%] whitespace-nowrap">Спасибо! Данные успешно отправлены.</p>
-        </DialogContent>
-      </Dialog>
+      <OkDialog open={okDialog} setOpen={setOkDialog} />
 
-      <Dialog open={filesDialog}>
-        <DialogContent className="flex flex-col items-center border-none min-w-[300px] bg-white">
-          <Button
-            className="-p-4 -m-5 sticky left-[100%] aspect-square text-red-500 text-xl bg-white hover:bg-white"
-            onClick={() => setFilesDialog(false)}
-          >
-            <HiX />
-          </Button>
-
-          <div className="flex-1 flex items-center justify-center">
-            <FilesCarousel removeFile={removeFile} files={files}></FilesCarousel>
-          </div>
-
-          <Button
-            onClick={() => fileRef.current?.click()}
-            className="w-full mt-4 bg-slate-900">
-            Добавить изображение
-          </Button>
-        </DialogContent>
-
-      </Dialog>
+      <FilesDialog open={filesDialog} setOpen={setFilesDialog} files={files} setFiles={setFiles} fileRef={fileRef} />
 
     </Form>
 

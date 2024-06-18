@@ -1,6 +1,5 @@
 'use client'
 
-import { IoIosWarning } from "react-icons/io";
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -38,7 +37,7 @@ export const FormSchema = z.object({
 })
 
 export default function QuizCard({ className }: Props) {
-    const [step, setStep] = useState(0)
+    const [step, setStep] = useState(5)
     const [agree, setAgree] = useState(false)
     const [checkAgree, setCheckAgree] = useState(false)
     const [checkPhone, setCheckPhone] = useState(false)
@@ -77,6 +76,7 @@ export default function QuizCard({ className }: Props) {
         setCheckPhone(false)
         form.setValue("phoneNumber", formatPhoneNumber((e.target as HTMLInputElement).value))
     }
+
 
     const checkNext = (): boolean => {
 
@@ -121,7 +121,7 @@ export default function QuizCard({ className }: Props) {
     }
 
     if (step == 7) return (
-        <div className="pl-[23%] pt-5 flex">
+        <div className="pt-5 flex items-center justify-center">
 
             <Card className="w-[73%] h-[600px] mb-10 flex flex-col items-center justify-center">
                 <CardHeader>
@@ -142,9 +142,9 @@ export default function QuizCard({ className }: Props) {
     )
 
     if (step == 6) return (
-        <div className="pl-[23%] pt-5 flex">
+        <div className="pt-5 flex items-center justify-center">
 
-            <Card className="w-[73%] h-[600px] mb-10 flex flex-col items-center justify-center">
+            <Card className="w-[80%] h-[600px] mb-10 flex flex-col items-center justify-center">
                 <CardHeader>
                     <span className="text-center text-3xl font-sans font-normal">
                         Заполните форму, чтобы получить <br /> оценку стоимости своего автомобиля
@@ -220,8 +220,8 @@ export default function QuizCard({ className }: Props) {
     )
 
     return (
-        <div className="pl-[23%] pt-5 flex">
-            <Card className="w-[53%] rounded-r-none h-[600px] mb-10 flex flex-col">
+        <div className="flex justify-center px-[5%]">
+            <Card className="rounded-r-none h-[600px] mb-10 flex flex-col basis-3/4">
 
                 <QuizContent step={step} setStep={setStep} form={form} />
 
@@ -237,9 +237,10 @@ export default function QuizCard({ className }: Props) {
                     </Button>
                 </CardFooter>
             </Card>
-            <Card className="w-[20%] rounded-l-none bg-slate-100 mb-10">
+
+            <Card className="flex basis-1/4 rounded-l-none bg-slate-100 mb-10">
                 <CardHeader>
-                    <div className="flex flex-row items-center justify-center mt-5">
+                    <div className="flex flex-row items-center justify-center mt-5 ">
                         <Image className="rounded-full" src={workerImage} alt="workerImage" height={60} width={60} />
                         <span className="ml-5">
                             Шинкарь
@@ -249,7 +250,6 @@ export default function QuizCard({ className }: Props) {
 
                     <CardTitle>
                         <div className="ml-[9%] w-0 h-0 border-l-[10px] border-l-transparent border-b-[15px] border-b-slate-300 border-r-[10px] border-r-transparent" />
-                        {/* <div className="absolute transform rotate-90 -top-[28%] left-[45%] w-0.5 bg-gray-500 z-10 h-[900px]"></div>  */}
                         <div className="-mt-1 bg-slate-300 h-auto min-h-[40px] my-3 w-full rounded-md text-base font-normal p-2">{
                             step == 0 && `От этих характеристик напрямую зависит сумма выкупа авто` ||
                             step == 1 && `Укажите пробег, чтобы мы примерно понимали техническое состояние двигателя` ||
@@ -261,14 +261,9 @@ export default function QuizCard({ className }: Props) {
                         </div>
 
                     </CardTitle>
-                    <CardDescription></CardDescription>
+
                 </CardHeader>
-                <CardContent>
 
-                </CardContent>
-                <CardFooter className="flex justify-between">
-
-                </CardFooter>
             </Card>
         </div>
     )
