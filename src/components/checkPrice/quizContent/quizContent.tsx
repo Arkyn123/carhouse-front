@@ -1,18 +1,13 @@
-import { CardContent, CardHeader, CardTitle } from "../ui/card"
-import { Input } from "../ui/inputWithoutBorder"
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
-import { Slider } from "@/components/ui/slider"
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
-import ConditionButton from "./conditionButton";
-import { ControllerRenderProps, Field, UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-import { FormSchema } from "./quizCard";
-import ChooseModel from "./quizContent/chooseModel";
-import ChooseMileage from "./quizContent/chooseMileage";
-import ChooseCondition from "./quizContent/chooseCondition";
-import ChooseLegal from "./quizContent/chooseLegal";
-import ChooseUrgency from "./quizContent/chooseUrgency";
-import ChoosePrice from "./quizContent/choosePrice";
+import { ControllerRenderProps, UseFormReturn } from "react-hook-form"
+import { FormSchema } from "./quizCard"
+import { z } from "zod"
+import { FormEvent, MouseEvent } from "react"
+import ChooseModel from "./steps/chooseModel"
+import ChooseMileage from "./steps/chooseMileage"
+import ChooseUrgency from "./steps/chooseUrgency"
+import ChoosePrice from "./steps/choosePrice"
+import ChooseLegal from "./steps/chooseLegal"
+import ChooseCondition from "./steps/chooseCondition"
 
 type Props = {
   step: number

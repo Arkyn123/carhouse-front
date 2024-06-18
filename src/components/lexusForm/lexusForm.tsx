@@ -8,7 +8,7 @@ export default function LexusForm() {
     return (
         <div className="bg-slate-600">
 
-            <div className="container px-[5%] flex justify-between py-8">
+            <div className="container px-[5%] flex justify-between my-10">
 
                 <OfferText />
 
