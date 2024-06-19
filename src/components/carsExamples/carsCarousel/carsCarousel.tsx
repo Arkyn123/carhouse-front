@@ -3,10 +3,9 @@
 import * as React from "react"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { useState } from "react"
-import { StaticImageData } from "next/image"
 import { defaultCars } from "./_default"
 import CarCard from "./ui/carCard"
-import OkDialog from "./checkPriceDialog"
+import PriceDialog from "./checkPriceDialog"
 
 export default function CarsCarousel() {
 
@@ -23,7 +22,7 @@ export default function CarsCarousel() {
             </CarouselContent>
             <CarouselPrevious className="left-[45%] top-[110%] size-12" />
             <CarouselNext className="right-[45%] top-[110%] size-12" />
-            <OkDialog open={priceDialog} setOpen={setPriceDialog} />
+            <PriceDialog open={priceDialog} setOpen={setPriceDialog} />
         </Carousel>
     )
 }

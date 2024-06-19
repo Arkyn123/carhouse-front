@@ -13,7 +13,7 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import FillForm from "./steps/fillForm"
-import ThanksCard from "./steps/thanksCard"
+import ThanksCard from "@/components/shared/thanksCard"
 
 type Props = {
     className?: string
@@ -64,7 +64,9 @@ export default function QuizCard({ className }: Props) {
     }
 
     if (step == 7) return (
-        <ThanksCard />
+        <div className="pt-5 flex items-center justify-center">
+            <ThanksCard className="w-[80%] h-[600px] " iconSize="text-[200px]" textSize="text-3xl" />
+        </div>
     )
 
     if (step == 6) return (

@@ -1,10 +1,13 @@
+import ThanksCard from "@/components/shared/thanksCard"
+import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { Form } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/inputWithoutBorder"
-import PhoneInput from "@/components/ui/phoneInput"
+import PhoneInput, { formatPhoneNumber } from "@/components/ui/phoneInput"
+import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Dispatch, SetStateAction } from "react"
-import { useForm } from "react-hook-form"
+import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
+import { FieldErrors, useForm } from "react-hook-form"
 import { HiCheck, HiX } from "react-icons/hi"
 import { z } from "zod"
 
@@ -14,20 +17,58 @@ type Props = {
 }
 
 const FormSchema = z.object({
-    model: z.string(),
+    name: z.string(),
     phoneNumber: z.string().refine(val => val.length == 18, { message: "Пожалуйста, введите номер телефона!" })
 })
 
-export default function OkDialog({ open, setOpen }: Props) {
+export default function PriceDialog({ open, setOpen }: Props) {
+
+    const [checkPhone, setCheckPhone] = useState(false)
+    const [ok, setOk] = useState(false)
+
+    useEffect(() => {
+        document.addEventListener('click', () => {
+            setCheckPhone(false)
+        })
+
+        return () => {
+            document.removeEventListener('click', () => {
+                setCheckPhone(false)
+            })
+        }
+    }, [])
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            model: "",
+            name: "",
             phoneNumber: ""
         }
     })
 
+    const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
+        if (!e) return
+
+        form.setValue("phoneNumber", formatPhoneNumber((e.target as HTMLInputElement).value))
+    }
+
+    const onSubmit = () => {
+        setOk(true)
+    }
+
+    const onError = (errors: FieldErrors<z.infer<typeof FormSchema>>) => {
+
+        if (errors.phoneNumber) setCheckPhone(true)
+    }
+
+
+    if (ok) return (
+        <Dialog open={open}>
+            <DialogContent className="flex flex-col items-center justify-center gap-2 bg-white px-10" onInteractOutside={() => setOpen(false)}>
+                <ThanksCard className="" iconSize="text-[100px]" textSize="text-xl" />
+            </DialogContent>
+        </Dialog>
+    )
     return (
         <Dialog open={open}>
             <DialogContent className="flex flex-col items-center justify-center gap-2 bg-white px-10" onInteractOutside={() => setOpen(false)}>
@@ -39,15 +80,15 @@ export default function OkDialog({ open, setOpen }: Props) {
                     Заполните форму для связи с вами
                 </span>
 
-                {/* <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col gap-4 w-full">
                         <FormField
                             control={form.control}
-                            name="model"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input className="bg-slate-100 p-5 text-left text-base rounded-2xl" placeholder="Марка, модель и год выпуска" {...field} />
+                                        <Input className="bg-slate-100 p-5 text-base rounded-2xl mt-6" placeholder="Ваше имя" {...field} />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -63,12 +104,10 @@ export default function OkDialog({ open, setOpen }: Props) {
                                 </FormItem>
                             )}
                         />
+                        <Button className="text-[110%] uppercase font-semibold tracking-wide mt-5 py-6 rounded-full w-full">Узнать стоимость авто</Button>
                     </form>
-                </Form > */}
+                </Form >
 
-                <Input className="bg-slate-100 p-5 text-base rounded-2xl mt-6" placeholder="Ваше имя" />
-
-                <PhoneInput className="p-5 rounded-2xl" />
 
             </DialogContent>
         </Dialog>
