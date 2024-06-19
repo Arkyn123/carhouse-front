@@ -5,7 +5,7 @@ import whatsappImage from "@public/whatsapp.svg"
 
 export default function Header() {
     return (
-        <div className="fixed inset-x-0 top-0 z-30 bg-white py-2 shadow-slate-700 shadow-md">
+        <div className="fixed inset-x-0 top-0 z-50 bg-white py-2 shadow-slate-700 shadow-md">
             <div className="container flex flex-row justify-between items-center">
 
                 <a href="/">

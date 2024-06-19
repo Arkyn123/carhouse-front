@@ -1,16 +1,11 @@
 import * as React from "react"
-
+import { type CarouselApi } from "@/components/ui/carousel"
 import { Card, CardContent } from "@/components/ui/card"
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Image from "next/image"
 import { Button } from "../../ui/button"
 import { HiX } from "react-icons/hi"
+import { useEffect, useState } from "react"
 
 type Props = {
     files: File[]
@@ -19,16 +14,29 @@ type Props = {
 
 export function FilesCarousel({ files, removeFile }: Props) {
 
-        if (!files.length) return (<div className="bg-slate-300/60 p-3 rounded-2xl shadow-sm shadow-slate-500/50 border-slate-700">Изображений не найдено</div>)
+    const [api, setApi] = useState<CarouselApi>()
+    const [current, setCurrent] = useState(0)
+
+    useEffect(() => {
+        if (!api) return
+
+        setCurrent(api.selectedScrollSnap() + 1)
+
+        api.on("select", () => {
+            setCurrent(api.selectedScrollSnap() + 1)
+        })
+    }, [api])
+
+
+    if (!files.length) return (<div className="bg-slate-300/60 p-3 rounded-2xl shadow-sm shadow-slate-500/50 border-slate-700">Изображений не найдено</div>)
     return (
-        <Carousel className="w-full max-w-xs">
+        <Carousel className="w-full max-w-xs" setApi={setApi}>
             <CarouselContent>
                 {files.map((el, index) => (
-                    <CarouselItem key={index}>
+                    <CarouselItem key={el.name}>
                         <div className="p-1">
                             <Card className="relative">
                                 <CardContent className="flex aspect-square items-center justify-center p-6">
-                                    {/* <span className="text-4xl font-semibold">{index + 1}</span> */}
                                     <div className="relative">
                                         <Image
                                             src={URL.createObjectURL(el)}
@@ -51,8 +59,7 @@ export function FilesCarousel({ files, removeFile }: Props) {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            {<CarouselPrevious />}
-            {<CarouselNext />}
-        </Carousel>
-    )
+            {current !== 1 && <CarouselPrevious />}
+            {current !== files.length && < CarouselNext />}
+        </Carousel>)
 }

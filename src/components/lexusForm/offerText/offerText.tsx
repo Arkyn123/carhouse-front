@@ -1,5 +1,3 @@
-import okImage from "@public/ok.svg"
-import Image from "next/image"
 import Clause from "./clause"
 
 

@@ -74,7 +74,7 @@ export function InputForm() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const filesArr = Array.from(e.target.files) as File[]
 
-    filesArr.forEach(file => {
+    filesArr.map(file => {
       {
         if (!file) return
 
@@ -88,6 +88,7 @@ export function InputForm() {
 
         setFiles(prev => {
           if (prev.some(el => el.name == file.name)) {
+            console.log('sueta');
 
             toast({
               title: 'Изображние уже загружено',
@@ -150,7 +151,7 @@ export function InputForm() {
         </div>
 
         <div className="flex items-center justify-center pt-2">
-          <Button className="px-[70px] py-[30px] rounded-full bg-slate-800 text-white text-[110%] uppercase font-bold tracking-wide" type="submit">Оценить авто</Button>
+          <Button className="px-[70px] py-[30px] rounded-full bg-slate-800 text-white text-[110%] uppercase font-bold tracking-wide" >Оценить авто</Button>
         </div>
 
       </form>
