@@ -1,12 +1,15 @@
+import { GlobalContext, GlobalContextType } from "@/components/shared/global"
+import { sendDataToBot } from "@/components/shared/sendToTelegram"
 import ThanksCard from "@/components/shared/thanksCard"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/inputWithoutBorder"
 import PhoneInput, { formatPhoneNumber } from "@/components/ui/phoneInput"
+import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useState } from "react"
 import { FieldErrors, useForm } from "react-hook-form"
 import { HiCheck, HiX } from "react-icons/hi"
 import { z } from "zod"
@@ -25,6 +28,8 @@ export default function PriceDialog({ open, setOpen }: Props) {
 
     const [checkPhone, setCheckPhone] = useState(false)
     const [ok, setOk] = useState(false)
+
+    const { globalVariable } = useContext(GlobalContext) as GlobalContextType
 
     useEffect(() => {
         document.addEventListener('click', () => {
@@ -48,16 +53,24 @@ export default function PriceDialog({ open, setOpen }: Props) {
 
     const handlePhoneNumber = (e: FormEvent<HTMLInputElement>) => {
         if (!e) return
-
+        setCheckPhone(false)
         form.setValue("phoneNumber", formatPhoneNumber((e.target as HTMLInputElement).value))
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
+        const res = await sendDataToBot(form.getValues(), [], globalVariable)
+        if (!res?.data.ok) {
+            toast({
+                title: 'Ошибка при отправке',
+                variant: 'destructive'
+            })
+            return
+        }
+        form.reset()
         setOk(true)
     }
 
     const onError = (errors: FieldErrors<z.infer<typeof FormSchema>>) => {
-
         if (errors.phoneNumber) setCheckPhone(true)
     }
 

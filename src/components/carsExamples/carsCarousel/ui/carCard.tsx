@@ -10,7 +10,7 @@ export default function CarCard({ car: { name, price, year, mileage, image }, se
     return (
         <div className="flex flex-col bg-white rounded-3xl w-[400px]">
             <Image src={image} alt={image.src} className="rounded-3xl" />
-            <div className="flex flex-col gap-2 py-4 px-6">
+            <div className="flex flex-col gap-2 py-6 px-6">
                 <span className="text-xl font-bold">
                     {name}
                 </span>

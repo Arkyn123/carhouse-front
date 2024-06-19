@@ -43,6 +43,7 @@ const sendMessage = async (data: any, ChatID: string) => {
 
 const generateMessage = (data: any) => {
     let text = '✅ Новый заказ ✅\n';
+    if (data.name) text += `Имя: ${data.name}\n`;
     if (data.model) text += `Модель: ${data.model}\n`;
     if (data.mileage) text += `Пробег: ${data.mileage}\n`;
     if (data.condition) text += `Состояние: ${data.condition}\n`;
