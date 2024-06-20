@@ -24,6 +24,5 @@ export default function CarsExamples() {
 
                 <CarsCarousel />
             </div>
-        </div>
-    )
+        </div>)
 }
