@@ -17,12 +17,17 @@ import { GlobalContext, GlobalContextType } from "@/components/shared/global"
 import FilesDialog from "./filesDialog"
 import OkDialog from "./okDialog"
 
+
+type Props = {
+  className?: string
+}
+
 const FormSchema = z.object({
   model: z.string(),
   phoneNumber: z.string().refine(val => val.length == 18, { message: "Пожалуйста, введите номер телефона!" })
 })
 
-export function InputForm() {
+export function InputForm({ className }: Props) {
 
   const [okDialog, setOkDialog] = useState(false)
   const [filesDialog, setFilesDialog] = useState(false)
@@ -120,14 +125,14 @@ export function InputForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit, onError)} className={cn(className, "flex flex-col items-center gap-4")}>
         <FormField
           control={form.control}
           name="model"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full mx-[50%]">
               <FormControl>
-                <Input className="bg-slate-100 p-5 text-left text-base rounded-2xl" placeholder="Марка, модель и год выпуска" {...field} />
+                <Input className="bg-transparent p-5 text-left text-base rounded-2xl w-full relative" placeholder="Марка, модель и год выпуска" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -136,22 +141,28 @@ export function InputForm() {
           control={form.control}
           name="phoneNumber"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full mx-[50%]">
               <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
-                <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "p-5 text-left rounded-2xl duration-150")} {...field} />
+              <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "bg-transparent p-5 text-left rounded-2xl duration-150")} {...field} />
+                {/* <div className="relative w-full">
+                  {checkPhone && <div className="absolute inset-0 bg-slate-100 p-5 text-left text-base rounded-2xl"></div>}
+                  <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "relative p-5 text-left rounded-2xl duration-150")} {...field} />
+                </div> */}
               </FormControl>
             </FormItem>
           )}
         />
 
-        <div className="flex flex-col w-[50%] items-start justify-center">
-          <p className="ml-3 text-[90%]">Прикрепить фото</p>
-          <Button className="rounded-xl bg-slate-800 text-white relative text-center w-max-[60%]" type="button" onClick={() => clickInput()}>{files.length == 0 ? "Загрузить файлы" : "Загружено " + files.length + " файлов"}</Button>
-          <Input className="hidden" ref={fileRef} multiple type="file" onChange={(e) => handleChange(e)}></Input>
+        <div className="flex items-center justify-start w-full px-[5%]">
+          <div className="flex flex-col w-[50%] items-center justify-center overflow-visible">
+            <p className="text-center text-nowrap text-[90%]">Прикрепить фото</p>
+            <Button className="rounded-xl bg-slate-800 text-white relative text-center w-max-[60%]" type="button" onClick={() => clickInput()}>{files.length == 0 ? "Загрузить файлы" : "Загружено " + files.length + " файлов"}</Button>
+            <Input className="hidden" ref={fileRef} multiple type="file" onChange={(e) => handleChange(e)}></Input>
+          </div>
         </div>
 
-        <div className="flex items-center justify-center pt-2">
-          <Button className="px-[70px] py-[30px] rounded-full bg-slate-800 text-white text-[110%] uppercase font-bold tracking-wide" >Оценить авто</Button>
+        <div className="flex items-center justify-center mt-2 w-full">
+          <Button className="w-full py-[30px] rounded-full bg-slate-800 text-white text-[110%] uppercase font-bold tracking-wide" >Оценить авто</Button>
         </div>
 
       </form>

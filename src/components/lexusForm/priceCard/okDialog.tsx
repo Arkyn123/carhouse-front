@@ -1,8 +1,6 @@
 import ThanksCard from "@/components/shared/thanksCard"
-import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Dispatch, SetStateAction } from "react"
-import { HiCheck, HiX } from "react-icons/hi"
 
 type Props = {
     open: boolean

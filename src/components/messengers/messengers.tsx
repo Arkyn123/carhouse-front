@@ -7,9 +7,9 @@ export default function Messengers() {
 
     return (
         <div className="bg-white">
-            <div className="container relative flex items-center justify-between my-24 md:px-[10%] 2xl:px-[7%] ">
+            <div className="container relative flex items-center justify-between my-16 md:px-[10%] 2xl:px-[7%] ">
                 <div className="relative flex flex-col">
-                    <span className="text-[230%] font-extrabold mb-5 text-slate-800 tracking-wide">
+                    <span className="text-[230%] font-extrabold mb-5 text-slate-800 tracking-wide leading-[50px]">
                         Проведём онлайн <br /> оценку вашего авто <br /> в мессенджерах
                     </span>
                     <span className="text-[130%] text-slate-800 font-light mb-10">

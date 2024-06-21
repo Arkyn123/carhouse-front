@@ -1,28 +1,30 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { InputForm } from "./inputForm"
-import { cn } from "@/lib/utils"
 
-type Props = {
-    className?: string
-}
+export default function PriceCard() {
 
-export default function PriceCard({ className }: Props) {
+
+    // return (
+    //     <div className="flex flex-col items-center justify-start bg-slate-50/90 rounded-3xl w-[325px] z-30 p-8">
+    //         <span className="text-center text-xl font-bold text-nowrap">
+    //             Узнайте цену вашего авто <br /> за 2 минуты
+    //         </span>
+    //     </div>
+    // )
 
     return (
-        <div className={cn(className, "flex items-center z-10 h-full")}>
-            <Card className="bg-slate-50/90 rounded-3xl h-[80%] w-[325px]">
-                <CardHeader className="text-center items-center">
-                    <CardTitle className="pt-3 pb-2 text-xl">
+            <Card className="flex flex-col items-center bg-slate-50/90 rounded-3xl w-[325px] z-30 py-2">
+                <CardHeader className="flex items-center justify-center">
+                    <CardTitle className="text-xl text-center">
                         Узнайте цену вашего авто <br /> за 2 минуты
                     </CardTitle>
-                    <CardDescription className="text-[80%] w-[65%]">Для определения стоимости авто заполните форму</CardDescription>
+                    <CardDescription className="text-[80%] text-center">Для определения стоимости авто заполните форму</CardDescription>
                 </CardHeader>
-                <CardContent className="">
+                <CardContent className="pb-6 px-[6%] w-full">
 
                     <InputForm />
 
                 </CardContent>
             </Card>
-        </div>
     )
 }

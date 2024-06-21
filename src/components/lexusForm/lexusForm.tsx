@@ -20,7 +20,7 @@ export default function LexusForm() {
                     />
                 </div>
 
-                <PriceCard className="" />
+                <PriceCard />
             </div>
         </div>)
 }

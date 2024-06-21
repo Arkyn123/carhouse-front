@@ -18,8 +18,8 @@ export default function AdvantageCard({ name, description, image }: Props) {
                 className="m-2"
 
             />
-            <div className="flex flex-col ml-4 gap-2">
-                <span className="text-nowrap font-bold text-[150%]">
+            <div className="flex flex-col ml-4 gap-2 overflow-hidden whitespace-normal">
+                <span className="text-balance font-bold text-[150%]">
                     {name}
                 </span>
                 <span className="text-balance font-light">
