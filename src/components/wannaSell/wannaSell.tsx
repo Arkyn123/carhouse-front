@@ -15,7 +15,7 @@ export default function WannaSell() {
                         Заполните форму и узнайте цену вашего <br /> авто за 2 минуты
                     </span>
 
-                    <InputForm className="w-[60%]" />
+                    <InputForm className="w-[60%]" inputClassName="placeholder:text-slate-300 border-slate-300" />
                 </div>
 
                 <Image className="rounded-full" src={workerImage} alt="workerImage" height={400} width={400} />

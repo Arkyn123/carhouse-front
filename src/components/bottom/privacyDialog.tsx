@@ -29,7 +29,7 @@ export default function PrivacyDilaog({ open, setOpen }: Props) {
     return (
         <Dialog open={open}>
             <DialogContent className="flex gap-[8px] flex-col items-start min-w-[900px] justify-center bg-white focus-visible:outline-0 focus-visible:ring-offset-0 focus-visible:ring-0" onInteractOutside={() => setOpen(false)}>
-                <p className="text-[180%] font-bold text-nowrap mb-6" >Политика конфиденциальности</p>
+                <p className="text-[180%] font-bold text-nowrap" >Политика конфиденциальности</p>
 
                 <BalanceText text="Оставляя данные на сайте, Вы соглашаетесь с Политикой конфиденциальности и защиты информации." />
 

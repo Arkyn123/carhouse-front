@@ -20,6 +20,7 @@ import OkDialog from "./okDialog"
 
 type Props = {
   className?: string
+  inputClassName?: string
 }
 
 const FormSchema = z.object({
@@ -27,7 +28,7 @@ const FormSchema = z.object({
   phoneNumber: z.string().refine(val => val.length == 18, { message: "Пожалуйста, введите номер телефона!" })
 })
 
-export function InputForm({ className }: Props) {
+export function InputForm({ className, inputClassName }: Props) {
 
   const [okDialog, setOkDialog] = useState(false)
   const [filesDialog, setFilesDialog] = useState(false)
@@ -132,7 +133,7 @@ export function InputForm({ className }: Props) {
           render={({ field }) => (
             <FormItem className="w-full mx-[50%]">
               <FormControl>
-                <Input className="bg-transparent p-5 text-left text-base rounded-2xl w-full relative" placeholder="Марка, модель и год выпуска" {...field} />
+                <Input className={cn(inputClassName, "bg-transparent p-5 text-left text-base rounded-2xl w-full relative")} placeholder="Марка, модель и год выпуска" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -143,7 +144,7 @@ export function InputForm({ className }: Props) {
           render={({ field }) => (
             <FormItem className="w-full mx-[50%]">
               <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
-              <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "bg-transparent p-5 text-left rounded-2xl duration-150")} {...field} />
+                <PhoneInput className={cn(checkPhone ? "!border-red-500 !bg-red-500/10" : "", inputClassName, "bg-transparent p-5 text-left rounded-2xl duration-150")} {...field} />
                 {/* <div className="relative w-full">
                   {checkPhone && <div className="absolute inset-0 bg-slate-100 p-5 text-left text-base rounded-2xl"></div>}
                   <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "relative p-5 text-left rounded-2xl duration-150")} {...field} />

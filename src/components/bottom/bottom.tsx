@@ -13,8 +13,8 @@ export default function Bottom() {
 
     return (
         <div className="bg-white">
-            <div className="container my-5 flex items-end justify-between px-[5%]">
-                <div className="flex flex-col gap-2">
+            <div className="container my-5 flex items-center justify-between px-[5%]">
+                <div className="flex flex-col gap-1">
                     {/* <Image
                         alt="Header image"
                         width={230}
