@@ -8,11 +8,11 @@ export default function LexusForm() {
     return (
         <div className="bg-slate-600">
 
-            <div className="container px-[5%] flex justify-between my-10">
+            <div className="container px-[5%] flex items-center xs:gap-4 xs:flex-col lg:flex-row justify-between my-10">
 
                 <OfferText />
 
-                <div className="absolute inset-x-0 flex items-center justify-center mt-32">
+                <div className="absolute inset-x-0 flex items-center justify-center mt-32 xs:invisible lg:visible">
                     <Image
                         alt="Lexus image"
                         src={lexusImage}
