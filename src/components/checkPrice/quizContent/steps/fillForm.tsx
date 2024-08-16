@@ -25,6 +25,7 @@ export default function FillForm({ form, setStep }: Props) {
     const [agree, setAgree] = useState(false)
     const [checkAgree, setCheckAgree] = useState(false)
     const [checkPhone, setCheckPhone] = useState(false)
+    const [privacyDialog, setPrivacyDialog] = useState(false)
 
     const { globalVariable } = useContext(GlobalContext) as GlobalContextType
 
@@ -72,19 +73,19 @@ export default function FillForm({ form, setStep }: Props) {
     }
 
     return (
-        <div className="pt-5 flex items-center justify-center">
+        <div className="flex items-center justify-center">
 
-            <Card className="w-[80%] h-[600px] flex flex-col items-center justify-start pt-10">
+            <Card className="w-[90%] h-[600px] flex flex-col items-center justify-start xs:pt-2 lg:pt-10">
                 <CardHeader>
-                    <span className="text-center text-3xl font-sans font-normal">
+                    <span className="text-center lg:text-3xl xs:text-xl font-sans font-normal">
                         Заполните форму, чтобы получить <br /> оценку стоимости своего автомобиля
                     </span>
-                    <span className="text-center text-lg font-sans font-light" >
+                    <span className="text-center lg:text-lg xs:text-md font-sans font-light" >
                         Мы уже произвели расчет по указанным параметрам. <br /> Результаты отправим в течение 5 минут
                     </span>
                 </CardHeader>
 
-                <CardContent className="border border-slate-300 rounded-sm w-[45%] h-auto" style={{ boxShadow: '0 0 600px rgba(0, 0, 0, 0.2)' }}>
+                <CardContent className="border border-slate-300 rounded-sm xs:w-[90%] lg:w-[45%] h-auto xs:pb-2 lg:pb-6" style={{ boxShadow: '0 0 600px rgba(0, 0, 0, 0.2)' }}>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
                             <FormField
@@ -101,7 +102,7 @@ export default function FillForm({ form, setStep }: Props) {
                                     </FormItem>
                                 )} />
                             <Button
-                                className="rounded-full mt-[10%] w-full px-[70px] py-[30px] bg-slate-800 text-white text-[110%] font-semibold text-center tracking-wide"
+                                className="rounded-full mt-[10%] w-full xs:py-[10px] lg:py-[30px] bg-slate-800 text-white xs:text-[90%] lg:text-[110%] font-semibold text-center tracking-wide"
                                 type="submit"
                             >
                                 Получить расчет стоимости
@@ -110,12 +111,12 @@ export default function FillForm({ form, setStep }: Props) {
                     </Form>
 
                     <div className="m-4 !cursor-pointer flex justify-center items-center" onClick={() => setAgree(!agree)}>
-                        <Input type="checkbox" checked={agree} className="mr-2 size-8" />
+                        <Input type="checkbox" checked={agree} className="mr-2 xs:size-28 lg:size-8" />
 
-                        <span className="text-pretty text-left text-[90%] text-slate-900">Я соглашаюсь на&nbsp;
-                            <a href="/" className="underline hover:text-slate-500 hover:no-underline">обработку персональный данных </a>
+                        <span className="text-pretty text-left xs:text-[80%] lg:text-[90%] text-slate-900">Я соглашаюсь на&nbsp;
+                            <a className="underline hover:text-slate-500 hover:no-underline">обработку персональный данных </a>
                             согласно&nbsp;
-                            <a href="/" className="underline hover:text-slate-500 hover:no-underline">политике конфиденциальности</a>
+                            <a onClick={() => setPrivacyDialog(true)} className="underline hover:text-slate-500 hover:no-underline">политике конфиденциальности</a>
                         </span>
                     </div>
 

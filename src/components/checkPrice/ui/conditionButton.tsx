@@ -20,10 +20,10 @@ export default function ConditionButton({ text, value }: Props) {
 
     return (
         <Button
-            className={cn(border, "duration-300 rounded-lg font-normal text-md text-start relative pl-4 flex justify-start text-balance h-auto min-h-16")}
+            className={cn(border, "duration-300 rounded-lg font-normal xs:text-base lg:text-base xs:text-center lg:text-start relative pl-4 flex justify-start text-balance h-auto min-h-16")}
             variant="outline"
         >
-            <Checkbox checked={checked} className="bg-slate-300 border-none mr-4 h-[20px] w-[20px]" />
+            <Checkbox checked={checked} className="bg-slate-300 border-none mr-4 size-[20px] lg:flex xs:hidden" />
 
             {text}
         </Button>

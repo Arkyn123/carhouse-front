@@ -21,7 +21,7 @@ export default function FilesDialog({ open, setOpen, files, setFiles, fileRef }:
 
     return (
         <Dialog open={open}>
-            <DialogContent className="flex flex-col items-center border-none min-w-[300px] bg-white" onInteractOutside={() => setOpen(false)}>
+            <DialogContent className="flex flex-col items-center border-none lg:max-w-[25%] xs:max-w-[80%] bg-white rounded-lg" onInteractOutside={() => setOpen(false)}>
 
                 <div className="flex-1 flex items-center justify-center">
                     <FilesCarousel removeFile={removeFile} files={files}></FilesCarousel>

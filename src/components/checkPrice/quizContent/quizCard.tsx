@@ -74,8 +74,8 @@ export default function QuizCard({ className }: Props) {
     )
 
     return (
-        <div className="flex justify-center px-[5%]">
-            <Card className="rounded-r-none h-[600px] flex flex-col basis-3/4">
+        <div className="flex justify-center xs:flex-col lg:flex-row px-[5%]">
+            <Card className="xs:rounded-b-none lg:rounded-bl-md lg:rounded-r-none h-[600px] flex flex-col basis-3/4">
 
                 <QuizContent step={step} setStep={setStep} form={form} />
 
@@ -87,12 +87,12 @@ export default function QuizCard({ className }: Props) {
 
                     <Button onClick={() => setStep(prev => prev > 0 ? prev - 1 : 0)} className="rounded-full" variant="outline" disabled={step == 0}><HiArrowLeft /></Button>
                     <Button onClick={() => setStep(prev => prev < 6 ? prev + 1 : 6)} className="bg-slate-700 text-lg gap-1 rounded-full" disabled={!checkNext()}>
-                        {step == 5 ? <span className="mb-1">Последний шаг</span> : <><span className="mb-1">Далее</span><HiArrowRight /></>}
+                        {step == 5 ? <span className="mb-1 xs:text-sm lg:text-base">Последний шаг</span> : <><span className="mb-1">Далее</span><HiArrowRight /></>}
                     </Button>
                 </CardFooter>
             </Card>
 
-            <Card className="flex basis-1/4 rounded-l-none bg-slate-100">
+            <Card className="flex basis-1/4 xs:rounded-t-none lg:rounded-tr-md lg:rounded-l-none bg-slate-100">
                 <CardHeader>
                     <div className="flex flex-row items-center justify-center mt-5 ">
                         <Image className="rounded-full" src={workerImage} alt="workerImage" height={60} width={60} />
@@ -115,9 +115,7 @@ export default function QuizCard({ className }: Props) {
                         </div>
 
                     </CardTitle>
-
                 </CardHeader>
-
             </Card>
         </div>
     )

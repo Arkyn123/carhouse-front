@@ -51,7 +51,7 @@ export default function ChooseMileage({ form }: Props) {
                                     <>
                                         <FormItem className="-mt-">
                                             <FormControl onChange={(e: any) => form.setValue("mileage", formatMileage(e.target.value))}>
-                                                <Input maxLength={7} className="m-2 py-6 text-slate-700 text-xl max-w-[25%]" {...field} />
+                                                <Input maxLength={7} className="m-2 py-6 text-slate-700 text-xl xs:max-w-[40%] lg:max-w-[25%]" {...field} />
                                             </FormControl>
                                         </FormItem>
                                         <div className="pt-6">

@@ -53,7 +53,7 @@ export function InputForm({ className, inputClassName }: Props) {
     },
   })
 
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null)
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const res = await sendDataToBot(data, files, globalVariable)
@@ -145,10 +145,6 @@ export function InputForm({ className, inputClassName }: Props) {
             <FormItem className="w-full mx-[50%]">
               <FormControl onChange={(e: FormEvent<HTMLInputElement>) => handlePhoneNumber(e)}>
                 <PhoneInput className={cn(checkPhone ? "!border-red-500 !bg-red-500/10" : "", inputClassName, "bg-transparent p-5 text-left rounded-2xl duration-150")} {...field} />
-                {/* <div className="relative w-full">
-                  {checkPhone && <div className="absolute inset-0 bg-slate-100 p-5 text-left text-base rounded-2xl"></div>}
-                  <PhoneInput className={cn(checkPhone ? "border-red-500 bg-red-500/10" : "", "relative p-5 text-left rounded-2xl duration-150")} {...field} />
-                </div> */}
               </FormControl>
             </FormItem>
           )}
@@ -157,7 +153,7 @@ export function InputForm({ className, inputClassName }: Props) {
         <div className="flex items-center justify-start w-full px-[5%]">
           <div className="flex flex-col w-[50%] items-center justify-center overflow-visible">
             <p className="text-center text-nowrap text-[90%]">Прикрепить фото</p>
-            <Button className="rounded-xl bg-slate-800 text-white relative text-center w-max-[60%]" type="button" onClick={() => clickInput()}>{files.length == 0 ? "Загрузить файлы" : "Загружено " + files.length + " файлов"}</Button>
+            <Button className={cn(files.length == 0 ? "" : "ml-4", "rounded-xl bg-slate-800 text-white relative text-center w-max-[60%]")} type="button" onClick={() => clickInput()}>{files.length == 0 ? "Загрузить файлы" : "Загружено " + files.length + " файлов"}</Button>
             <Input className="hidden" ref={fileRef} multiple type="file" onChange={(e) => handleChange(e)}></Input>
           </div>
         </div>

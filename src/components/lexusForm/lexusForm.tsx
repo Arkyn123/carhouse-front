@@ -8,7 +8,7 @@ export default function LexusForm() {
     return (
         <div className="bg-slate-600">
 
-            <div className="container px-[5%] flex items-center xs:gap-4 xs:flex-col lg:flex-row justify-between my-10">
+            <div className="container px-[5%] flex xs:items-center xs:gap-4 xs:flex-col lg:flex-row lg:items-start justify-between xs:my-5 lg:my-10">
 
                 <OfferText />
 
